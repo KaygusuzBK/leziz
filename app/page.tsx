@@ -3,6 +3,7 @@ import Footer from "./components/Footer";
 import SectionTitle from "./components/SectionTitle";
 import RecipeCard from "./components/RecipeCard";
 import CategoryCard from "./components/CategoryCard";
+import DeveloperBar from "./components/DeveloperBar";
 
 const featuredRecipes = [
   {
@@ -125,6 +126,7 @@ export default function Home() {
         </div>
       </div>
       <Footer />
+      <DeveloperBar />
     </div>
   );
 }

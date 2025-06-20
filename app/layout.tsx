@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Epilogue, Noto_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./lib/context/ThemeContext";
+import { AuthProvider } from "./lib/context/AuthContext";
 
 const epilogue = Epilogue({
   variable: "--font-epilogue",
@@ -32,7 +33,9 @@ export default function RootLayout({
         style={{ fontFamily: 'Epilogue, "Noto Sans", sans-serif' }}
       >
         <ThemeProvider>
-          {children}
+          <AuthProvider>
+            {children}
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
