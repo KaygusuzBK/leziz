@@ -1,35 +1,25 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import { useTheme } from '../lib/context/ThemeContext';
 import { useAuth } from '../lib/context/AuthContext';
 import LoginModal from './LoginModal';
 import RegisterModal from './RegisterModal';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Header() {
   const { theme, toggleTheme } = useTheme();
   const { user, isAuthenticated, logout } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-  const [showUserMenu, setShowUserMenu] = useState(false);
-  const userMenuRef = useRef<HTMLDivElement>(null);
-
-  // Click outside handler for user menu
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
-        setShowUserMenu(false);
-      }
-    }
-
-    if (showUserMenu) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [showUserMenu]);
 
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
@@ -48,7 +38,6 @@ export default function Header() {
 
   const handleLogout = () => {
     logout();
-    setShowUserMenu(false);
   };
 
   return (
@@ -64,13 +53,47 @@ export default function Header() {
                 ></path>
               </svg>
             </div>
-            <h2 className="text-lg font-bold leading-tight tracking-[-0.015em]" style={{ color: 'var(--text-primary)' }}>Leziz</h2>
+            <Link href="/" className="text-lg font-bold leading-tight tracking-[-0.015em]" style={{ color: 'var(--text-primary)' }}>
+              Leziz
+            </Link>
           </div>
           <div className="hidden md:flex items-center gap-6 lg:gap-9">
-            <a className="text-sm font-medium leading-normal transition-colors" style={{ color: 'var(--text-primary)' }} href="#" onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-primary)'}>Anasayfa</a>
-            <a className="text-sm font-medium leading-normal transition-colors" style={{ color: 'var(--text-primary)' }} href="#" onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-primary)'}>Tarifler</a>
-            <a className="text-sm font-medium leading-normal transition-colors" style={{ color: 'var(--text-primary)' }} href="#" onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-primary)'}>Kategoriler</a>
-            <a className="text-sm font-medium leading-normal transition-colors" style={{ color: 'var(--text-primary)' }} href="#" onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-primary)'}>Hakkımızda</a>
+            <Link 
+              href="/" 
+              className="text-sm font-medium leading-normal transition-colors" 
+              style={{ color: 'var(--text-primary)' }} 
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} 
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+            >
+              Anasayfa
+            </Link>
+            <Link 
+              href="/recipes" 
+              className="text-sm font-medium leading-normal transition-colors" 
+              style={{ color: 'var(--text-primary)' }} 
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} 
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+            >
+              Tarifler
+            </Link>
+            <Link 
+              href="/categories" 
+              className="text-sm font-medium leading-normal transition-colors" 
+              style={{ color: 'var(--text-primary)' }} 
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} 
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+            >
+              Kategoriler
+            </Link>
+            <Link 
+              href="/about" 
+              className="text-sm font-medium leading-normal transition-colors" 
+              style={{ color: 'var(--text-primary)' }} 
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} 
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+            >
+              Hakkımızda
+            </Link>
           </div>
         </div>
         <div className="flex flex-1 justify-end gap-4 md:gap-8">
@@ -141,83 +164,47 @@ export default function Header() {
               </button>
             </div>
           ) : (
-            // User Menu (when authenticated)
-            <div className="relative" ref={userMenuRef}>
-              <button
-                onClick={() => setShowUserMenu(!showUserMenu)}
-                className="flex items-center gap-2 px-3 py-2 rounded-xl transition-colors"
-                style={{ backgroundColor: 'var(--card-bg)', color: 'var(--text-primary)' }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--card-hover)'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--card-bg)'}
-              >
-                {/* User Avatar */}
-                <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium" style={{ backgroundColor: 'var(--accent)', color: '#fcf9f8' }}>
-                  {user?.name?.charAt(0)?.toUpperCase() || 'U'}
-                </div>
-                
-                {/* User Name */}
-                <span className="hidden md:block text-sm font-medium truncate max-w-24">
-                  {user?.name}
-                </span>
-                
-                {/* Dropdown Arrow */}
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  width="16" 
-                  height="16" 
-                  fill="currentColor" 
-                  viewBox="0 0 256 256"
-                  className={`transition-transform ${showUserMenu ? 'rotate-180' : ''}`}
-                >
-                  <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,133.66,90.34L128,95.92l-5.66-5.58A8,8,0,0,1,133.66,90.34Z"></path>
-                </svg>
-              </button>
-              
-              {/* User Dropdown Menu */}
-              {showUserMenu && (
-                <div 
-                  className="absolute right-0 top-full mt-2 w-48 rounded-xl shadow-lg border py-2 z-50"
-                  style={{ 
-                    backgroundColor: 'var(--background)', 
-                    borderColor: 'var(--card-border)',
-                    color: 'var(--text-primary)'
-                  }}
-                >
-                  <div className="px-4 py-2 border-b" style={{ borderColor: 'var(--card-border)' }}>
-                    <div className="text-sm font-medium">{user?.name}</div>
-                    <div className="text-xs opacity-70 truncate">{user?.email}</div>
+            // User Menu (when authenticated) - Using shadcn/ui DropdownMenu
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-2 px-3 py-2 rounded-xl transition-colors">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium" style={{ backgroundColor: 'var(--accent)', color: '#fcf9f8' }}>
+                    {user?.name?.charAt(0)?.toUpperCase() || 'U'}
                   </div>
-                  
-                  <div className="py-1">
-                    <button
-                      className="w-full text-left px-4 py-2 text-sm transition-colors hover:bg-opacity-10"
-                      style={{ color: 'var(--text-primary)' }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--card-bg)'}
-                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                    >
-                      Profil
-                    </button>
-                    <button
-                      className="w-full text-left px-4 py-2 text-sm transition-colors hover:bg-opacity-10"
-                      style={{ color: 'var(--text-primary)' }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--card-bg)'}
-                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                    >
-                      Ayarlar
-                    </button>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 text-sm transition-colors hover:bg-opacity-10"
-                      style={{ color: 'var(--accent)' }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--card-bg)'}
-                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                    >
-                      Çıkış Yap
-                    </button>
+                  <span className="hidden md:block text-sm font-medium truncate max-w-24">
+                    {user?.name}
+                  </span>
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    width="16" 
+                    height="16" 
+                    fill="currentColor" 
+                    viewBox="0 0 256 256"
+                  >
+                    <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,133.66,90.34L128,95.92l-5.66-5.58A8,8,0,0,1,133.66,90.34Z"></path>
+                  </svg>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{user?.name}</p>
+                    <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
                   </div>
-                </div>
-              )}
-            </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/profile">Profil</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/settings">Ayarlar</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout} className="text-red-600">
+                  Çıkış Yap
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
         </div>
       </header>
