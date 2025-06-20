@@ -1,4 +1,42 @@
 @import "tailwindcss";
+@plugin "daisyui";
+
+@plugin "daisyui/theme" {
+  name: "LEZİZ";
+  default: false;
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: oklch(97.36% 0.005 89.57);
+  --color-base-200: oklch(93.18% 0.008 89.65);
+  --color-base-300: oklch(67.43% 0.003 269.8);
+  --color-base-content: oklch(23.6% 0.004 89.26);
+  --color-primary: oklch(58.38% 0.15 44.22);
+  --color-primary-content: oklch(97.36% 0.005 89.57);
+  --color-secondary: oklch(44.38% 0.076 101.4);
+  --color-secondary-content: oklch(97.36% 0.005 89.57);
+  --color-accent: oklch(74.6% 0.187 76.84);
+  --color-accent-content: oklch(23.6% 0.004 89.26);
+  --color-neutral: oklch(23.6% 0.004 89.26);
+  --color-neutral-content: oklch(97.36% 0.005 89.57);
+  --color-info: oklch(60.1% 0.203 260.6);
+  --color-info-content: oklch(97.36% 0.005 89.57);
+  --color-success: oklch(63.31% 0.154 142.22);
+  --color-success-content: oklch(97.36% 0.005 89.57);
+  --color-warning: oklch(79.31% 0.184 81.33);
+  --color-warning-content: oklch(23.6% 0.004 89.26);
+  --color-error: oklch(53.23% 0.224 29.57);
+  --color-error-content: oklch(97.36% 0.005 89.57);
+  --radius-selector: 2rem;
+  --radius-field: 1rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 1;
+}
+
+
 
 :root {
   --background: #ffffff;
@@ -24,3 +62,4 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
