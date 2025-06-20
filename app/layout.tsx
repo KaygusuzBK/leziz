@@ -5,6 +5,7 @@ import { ThemeProvider } from "./lib/context/ThemeContext";
 import { AuthProvider } from "./lib/context/AuthContext";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import DeveloperBar from "./components/DeveloperBar";
 
 const epilogue = Epilogue({
   variable: "--font-epilogue",
@@ -42,6 +43,7 @@ export default function RootLayout({
                 {children}
               </main>
               <Footer />
+              <DeveloperBar />
             </div>
           </AuthProvider>
         </ThemeProvider>

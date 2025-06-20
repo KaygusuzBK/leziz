@@ -1,7 +1,6 @@
 import SectionTitle from "./components/SectionTitle";
 import RecipeCard from "./components/RecipeCard";
 import CategoryCard from "./components/CategoryCard";
-import DeveloperBar from "./components/DeveloperBar";
 
 const featuredRecipes = [
   {
@@ -76,53 +75,50 @@ const categories = [
 
 export default function Home() {
   return (
-    <>
-      <div className="layout-container flex h-full grow flex-col max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12">
-        {/* Hero Section */}
-        <div className="mb-8 px-4 md:px-8 lg:px-12">
-          <div className="px-2 md:px-4 py-2 md:py-3">
-            <div
-              className="bg-cover bg-center flex flex-col justify-end overflow-hidden rounded-xl min-h-60 md:min-h-80"
-              style={{
-                backgroundImage: 'linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 25%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuCSGynRMJMNy_-sQqH4X7NjpLJyS65M4JLF-c9K0X2tOzxr-loC20PQmE4zLQ5iuppOT4QGCypbIg45jfQTSWT93Geow6CoiF-DHMaTEfLH5BlNbnh_3GSoJYVXEbFym5EOoacXGxqqJdFlAJxuaLRtFjUimxgmiyRHgxqYPRwBVnmEkVrSwhZ3Y27P5Qz5soBLzXoL4tykQpggcHFR3Pv4Ed6siWXGKGBHDo1eFNG4tJonvJLkpQwYgmGCdqhtNyG24XLhNCDx9JRU")'
-              }}
-            >
-              <div className="flex p-4">
-                <p className="text-white tracking-light text-xl md:text-2xl lg:text-[28px] font-bold leading-tight">
-                  Lezzetli Tarifleri Keşfet
-                </p>
-              </div>
+    <div className="layout-container flex h-full grow flex-col max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12">
+      {/* Hero Section */}
+      <div className="mb-8 px-4 md:px-8 lg:px-12">
+        <div className="px-2 md:px-4 py-2 md:py-3">
+          <div
+            className="bg-cover bg-center flex flex-col justify-end overflow-hidden rounded-xl min-h-60 md:min-h-80"
+            style={{
+              backgroundImage: 'linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 25%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuCSGynRMJMNy_-sQqH4X7NjpLJyS65M4JLF-c9K0X2tOzxr-loC20PQmE4zLQ5iuppOT4QGCypbIg45jfQTSWT93Geow6CoiF-DHMaTEfLH5BlNbnh_3GSoJYVXEbFym5EOoacXGxqqJdFlAJxuaLRtFjUimxgmiyRHgxqYPRwBVnmEkVrSwhZ3Y27P5Qz5soBLzXoL4tykQpggcHFR3Pv4Ed6siWXGKGBHDo1eFNG4tJonvJLkpQwYgmGCdqhtNyG24XLhNCDx9JRU")'
+            }}
+          >
+            <div className="flex p-4">
+              <p className="text-white tracking-light text-xl md:text-2xl lg:text-[28px] font-bold leading-tight">
+                Lezzetli Tarifleri Keşfet
+              </p>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Featured Recipes */}
-        <SectionTitle title="Öne Çıkan Tarifler" />
-        <div className="flex overflow-x-auto scrollbar-hide">
-          <div className="flex items-stretch p-4 gap-3 min-w-full">
-            {featuredRecipes.map((recipe, i) => (
-              <RecipeCard key={i} {...recipe} />
-            ))}
-          </div>
-        </div>
-
-        {/* Latest Recipes */}
-        <SectionTitle title="En Yeni Tarifler" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 p-4">
-          {latestRecipes.map((recipe, i) => (
+      {/* Featured Recipes */}
+      <SectionTitle title="Öne Çıkan Tarifler" />
+      <div className="flex overflow-x-auto scrollbar-hide">
+        <div className="flex items-stretch p-4 gap-3 min-w-full">
+          {featuredRecipes.map((recipe, i) => (
             <RecipeCard key={i} {...recipe} />
           ))}
         </div>
-
-        {/* Popular Categories */}
-        <SectionTitle title="Popüler Kategoriler" />
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4">
-          {categories.map((cat, i) => (
-            <CategoryCard key={i} {...cat} />
-          ))}
-        </div>
       </div>
-      <DeveloperBar />
-    </>
+
+      {/* Latest Recipes */}
+      <SectionTitle title="En Yeni Tarifler" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 p-4">
+        {latestRecipes.map((recipe, i) => (
+          <RecipeCard key={i} {...recipe} />
+        ))}
+      </div>
+
+      {/* Popular Categories */}
+      <SectionTitle title="Popüler Kategoriler" />
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4">
+        {categories.map((cat, i) => (
+          <CategoryCard key={i} {...cat} />
+        ))}
+      </div>
+    </div>
   );
 }
