@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Epilogue, Noto_Sans } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "./lib/context/ThemeContext";
 
 const epilogue = Epilogue({
   variable: "--font-epilogue",
@@ -25,12 +26,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr">
+    <html lang="tr" suppressHydrationWarning>
       <body
         className={`${epilogue.variable} ${notoSans.variable} antialiased`}
         style={{ fontFamily: 'Epilogue, "Noto Sans", sans-serif' }}
       >
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

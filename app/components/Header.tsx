@@ -1,8 +1,14 @@
+'use client';
+
+import { useTheme } from '../lib/context/ThemeContext';
+
 export default function Header() {
+  const { theme, toggleTheme } = useTheme();
+
   return (
-    <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f3eae7] px-4 md:px-10 py-3">
+    <header className="flex items-center justify-between whitespace-nowrap border-b border-solid px-4 md:px-10 py-3" style={{ borderColor: 'var(--card-border)' }}>
       <div className="flex items-center gap-4 md:gap-8">
-        <div className="flex items-center gap-2 md:gap-4 text-[#1b110d]">
+        <div className="flex items-center gap-2 md:gap-4" style={{ color: 'var(--text-primary)' }}>
           <div className="size-4">
             <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -11,13 +17,13 @@ export default function Header() {
               ></path>
             </svg>
           </div>
-          <h2 className="text-[#1b110d] text-lg font-bold leading-tight tracking-[-0.015em]">Leziz</h2>
+          <h2 className="text-lg font-bold leading-tight tracking-[-0.015em]" style={{ color: 'var(--text-primary)' }}>Leziz</h2>
         </div>
         <div className="hidden md:flex items-center gap-6 lg:gap-9">
-          <a className="text-[#1b110d] text-sm font-medium leading-normal hover:text-[#ef6a42] transition-colors" href="#">Anasayfa</a>
-          <a className="text-[#1b110d] text-sm font-medium leading-normal hover:text-[#ef6a42] transition-colors" href="#">Tarifler</a>
-          <a className="text-[#1b110d] text-sm font-medium leading-normal hover:text-[#ef6a42] transition-colors" href="#">Kategoriler</a>
-          <a className="text-[#1b110d] text-sm font-medium leading-normal hover:text-[#ef6a42] transition-colors" href="#">Hakkımızda</a>
+          <a className="text-sm font-medium leading-normal transition-colors" style={{ color: 'var(--text-primary)' }} href="#" onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-primary)'}>Anasayfa</a>
+          <a className="text-sm font-medium leading-normal transition-colors" style={{ color: 'var(--text-primary)' }} href="#" onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-primary)'}>Tarifler</a>
+          <a className="text-sm font-medium leading-normal transition-colors" style={{ color: 'var(--text-primary)' }} href="#" onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-primary)'}>Kategoriler</a>
+          <a className="text-sm font-medium leading-normal transition-colors" style={{ color: 'var(--text-primary)' }} href="#" onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-primary)'}>Hakkımızda</a>
         </div>
       </div>
       <div className="flex flex-1 justify-end gap-4 md:gap-8">
@@ -25,7 +31,8 @@ export default function Header() {
         <label className="flex flex-col min-w-32 md:min-w-40 !h-10 max-w-64">
           <div className="flex w-full flex-1 items-stretch rounded-xl h-full">
             <div
-              className="text-[#9a5e4c] flex border-none bg-[#f3eae7] items-center justify-center pl-4 rounded-l-xl border-r-0"
+              className="flex border-none items-center justify-center pl-4 rounded-l-xl border-r-0"
+              style={{ backgroundColor: 'var(--card-bg)', color: 'var(--text-secondary)' }}
               data-icon="MagnifyingGlass"
               data-size="24px"
               data-weight="regular"
@@ -38,16 +45,37 @@ export default function Header() {
             </div>
             <input
               placeholder="Ara"
-              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#1b110d] focus:outline-0 focus:ring-0 border-none bg-[#f3eae7] focus:border-none h-full placeholder:text-[#9a5e4c] px-4 rounded-l-none border-l-0 pl-2 text-sm md:text-base font-normal leading-normal"
+              className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl focus:outline-0 focus:ring-0 border-none focus:border-none h-full px-4 rounded-l-none border-l-0 pl-2 text-sm md:text-base font-normal leading-normal"
+              style={{ backgroundColor: 'var(--card-bg)', color: 'var(--text-primary)' }}
             />
           </div>
         </label>
+        
+        {/* Theme Toggle Button */}
+        <button
+          onClick={toggleTheme}
+          className="flex min-w-[40px] max-w-[40px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-3 transition-colors"
+          style={{ backgroundColor: 'var(--card-bg)', color: 'var(--text-primary)' }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--card-hover)'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--card-bg)'}
+        >
+          {theme === 'light' ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+              <path d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,193.8A88,88,0,0,1,65.67,72.11a89,89,0,0,1,31.4-26.46,72.39,72.39,0,0,0,1.68,71.83A40.29,40.29,0,0,0,168,112.66a72.4,72.4,0,0,0,71.86,1.68A89,89,0,0,1,188.9,193.8Z"></path>
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
+              <path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l16-16A8,8,0,0,0,69.66,42.34Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"></path>
+            </svg>
+          )}
+        </button>
+        
         {/* Auth Buttons */}
         <div className="flex gap-2">
-          <button className="flex min-w-[70px] md:min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-3 md:px-4 bg-[#ef6a42] text-[#fcf9f8] text-xs md:text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#d55a38] transition-colors">
+          <button className="flex min-w-[70px] md:min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-3 md:px-4 text-xs md:text-sm font-bold leading-normal tracking-[0.015em] transition-colors" style={{ backgroundColor: 'var(--accent)', color: '#fcf9f8' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--accent-hover)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--accent)'}>
             <span className="truncate">Kayıt Ol</span>
           </button>
-          <button className="flex min-w-[70px] md:min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-3 md:px-4 bg-[#f3eae7] text-[#1b110d] text-xs md:text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#e8dcd8] transition-colors">
+          <button className="flex min-w-[70px] md:min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-3 md:px-4 text-xs md:text-sm font-bold leading-normal tracking-[0.015em] transition-colors" style={{ backgroundColor: 'var(--card-bg)', color: 'var(--text-primary)' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--card-hover)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--card-bg)'}>
             <span className="truncate">Giriş Yap</span>
           </button>
         </div>

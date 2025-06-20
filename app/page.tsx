@@ -77,14 +77,14 @@ const categories = [
 
 export default function Home() {
   return (
-    <div className="relative flex size-full min-h-screen flex-col bg-[#fcf9f8] group/design-root overflow-x-hidden" style={{fontFamily: 'Epilogue, "Noto Sans", sans-serif'}}>
+    <div className="relative flex size-full min-h-screen flex-col group/design-root overflow-x-hidden" style={{fontFamily: 'Epilogue, "Noto Sans", sans-serif', backgroundColor: 'var(--background)'}}>
       <Header />
       <div className="layout-container flex h-full grow flex-col max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-12">
         {/* Hero Section */}
         <div className="mb-8 px-4 md:px-8 lg:px-12">
           <div className="px-2 md:px-4 py-2 md:py-3">
             <div
-              className="bg-cover bg-center flex flex-col justify-end overflow-hidden bg-[#fcf9f8] rounded-xl min-h-60 md:min-h-80"
+              className="bg-cover bg-center flex flex-col justify-end overflow-hidden rounded-xl min-h-60 md:min-h-80"
               style={{
                 backgroundImage: 'linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 25%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuCSGynRMJMNy_-sQqH4X7NjpLJyS65M4JLF-c9K0X2tOzxr-loC20PQmE4zLQ5iuppOT4QGCypbIg45jfQTSWT93Geow6CoiF-DHMaTEfLH5BlNbnh_3GSoJYVXEbFym5EOoacXGxqqJdFlAJxuaLRtFjUimxgmiyRHgxqYPRwBVnmEkVrSwhZ3Y27P5Qz5soBLzXoL4tykQpggcHFR3Pv4Ed6siWXGKGBHDo1eFNG4tJonvJLkpQwYgmGCdqhtNyG24XLhNCDx9JRU")'
               }}
