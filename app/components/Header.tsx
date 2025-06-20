@@ -167,7 +167,7 @@ export default function Header() {
             // User Menu (when authenticated) - Using shadcn/ui DropdownMenu
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2 px-3 py-2 rounded-xl transition-colors">
+                <button className="flex items-center gap-2 px-3 py-2 rounded-xl transition-colors h-10">
                   <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium" style={{ backgroundColor: 'var(--accent)', color: '#fcf9f8' }}>
                     {user?.name?.charAt(0)?.toUpperCase() || 'U'}
                   </div>
