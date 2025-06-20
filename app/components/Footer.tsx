@@ -1,15 +1,49 @@
 'use client';
 
+import Link from 'next/link';
+
 export default function Footer() {
   return (
     <footer className="flex justify-center">
       <div className="flex max-w-[960px] flex-1 flex-col">
         <footer className="flex flex-col gap-6 px-5 py-10 text-center">
           <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
-            <a className="text-sm md:text-base font-normal leading-normal min-w-32 md:min-w-40 transition-colors" style={{ color: 'var(--text-secondary)' }} href="#" onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}>Hakkımızda</a>
-            <a className="text-sm md:text-base font-normal leading-normal min-w-32 md:min-w-40 transition-colors" style={{ color: 'var(--text-secondary)' }} href="#" onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}>İletişim</a>
-            <a className="text-sm md:text-base font-normal leading-normal min-w-32 md:min-w-40 transition-colors" style={{ color: 'var(--text-secondary)' }} href="#" onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}>Gizlilik Politikası</a>
-            <a className="text-sm md:text-base font-normal leading-normal min-w-32 md:min-w-40 transition-colors" style={{ color: 'var(--text-secondary)' }} href="#" onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}>Kullanım Şartları</a>
+            <Link 
+              href="/about"
+              className="text-sm md:text-base font-normal leading-normal min-w-32 md:min-w-40 transition-colors" 
+              style={{ color: 'var(--text-secondary)' }} 
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} 
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+            >
+              Hakkımızda
+            </Link>
+            <Link 
+              href="/contact"
+              className="text-sm md:text-base font-normal leading-normal min-w-32 md:min-w-40 transition-colors" 
+              style={{ color: 'var(--text-secondary)' }} 
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} 
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+            >
+              İletişim
+            </Link>
+            <Link 
+              href="/privacy"
+              className="text-sm md:text-base font-normal leading-normal min-w-32 md:min-w-40 transition-colors" 
+              style={{ color: 'var(--text-secondary)' }} 
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} 
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+            >
+              Gizlilik Politikası
+            </Link>
+            <Link 
+              href="/terms"
+              className="text-sm md:text-base font-normal leading-normal min-w-32 md:min-w-40 transition-colors" 
+              style={{ color: 'var(--text-secondary)' }} 
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} 
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-secondary)'}
+            >
+              Kullanım Şartları
+            </Link>
           </div>
           <div className="flex flex-wrap justify-center gap-4">
             <a href="#" className="hover:scale-110 transition-transform">
