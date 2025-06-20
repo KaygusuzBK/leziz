@@ -3,6 +3,8 @@ import { Epilogue, Noto_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./lib/context/ThemeContext";
 import { AuthProvider } from "./lib/context/AuthContext";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 const epilogue = Epilogue({
   variable: "--font-epilogue",
@@ -34,7 +36,13 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <AuthProvider>
-            {children}
+            <div className="relative flex size-full min-h-screen flex-col group/design-root overflow-x-hidden" style={{fontFamily: 'Epilogue, "Noto Sans", sans-serif', backgroundColor: 'var(--background)'}}>
+              <Header />
+              <main className="flex h-full grow flex-col">
+                {children}
+              </main>
+              <Footer />
+            </div>
           </AuthProvider>
         </ThemeProvider>
       </body>
