@@ -24,6 +24,11 @@ const notoSans = Noto_Sans({
 export const metadata: Metadata = {
   title: "Leziz - Lezzetli Tarifleri Keşfet",
   description: "Dünyanın en iyi tariflerini bulun ve paylaşın",
+  icons: {
+    icon: '/logo.jpg',
+    shortcut: '/logo.jpg',
+    apple: '/logo.jpg',
+  },
 };
 
 export default function RootLayout({
@@ -34,12 +39,11 @@ export default function RootLayout({
   return (
     <html lang="tr" suppressHydrationWarning>
       <body
-        className={`${epilogue.variable} ${notoSans.variable} antialiased`}
-        style={{ fontFamily: 'Epilogue, "Noto Sans", sans-serif' }}
+        className={`${epilogue.variable} ${notoSans.variable} antialiased font-epilogue`}
       >
         <ThemeProvider>
           <AuthProvider>
-            <div className="relative flex size-full min-h-screen flex-col group/design-root overflow-x-hidden" style={{fontFamily: 'Epilogue, "Noto Sans", sans-serif', backgroundColor: 'var(--background)'}}>
+            <div className="relative flex size-full min-h-screen flex-col group/design-root overflow-x-hidden bg-background">
               <Header />
               <Analytics />
               <SpeedInsights />
