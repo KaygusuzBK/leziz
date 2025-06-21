@@ -6,6 +6,7 @@ import { AuthProvider } from "./lib/context/AuthContext";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import DeveloperBar from "./components/DeveloperBar";
 
 const epilogue = Epilogue({
@@ -41,6 +42,7 @@ export default function RootLayout({
             <div className="relative flex size-full min-h-screen flex-col group/design-root overflow-x-hidden" style={{fontFamily: 'Epilogue, "Noto Sans", sans-serif', backgroundColor: 'var(--background)'}}>
               <Header />
               <Analytics />
+              <SpeedInsights />
               <main className="flex h-full grow flex-col">
                 {children}
                 
