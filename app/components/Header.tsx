@@ -6,6 +6,7 @@ import { useTheme } from '../lib/context/ThemeContext';
 import { useAuth } from '../lib/context/AuthContext';
 import LoginModal from './LoginModal';
 import RegisterModal from './RegisterModal';
+import { hoverEffects } from '@/lib/utils';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,9 +46,9 @@ export default function Header() {
 
   return (
     <>
-      <header className="flex items-center justify-between whitespace-nowrap border-b border-solid px-4 md:px-10 py-3" style={{ borderColor: 'var(--card-border)' }}>
+      <header className="flex items-center justify-between whitespace-nowrap border-b border-card px-4 md:px-10 py-3">
         <div className="flex items-center gap-4 md:gap-8">
-          <div className="flex items-center gap-2 md:gap-4" style={{ color: 'var(--text-primary)' }}>
+          <div className="flex items-center gap-2 md:gap-4 text-primary">
             <div className="size-4">
               <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -56,44 +57,32 @@ export default function Header() {
                 ></path>
               </svg>
             </div>
-            <Link href="/" className="text-lg font-bold leading-tight tracking-[-0.015em]" style={{ color: 'var(--text-primary)' }}>
+            <Link href="/" className="text-lg font-bold leading-tight tracking-[-0.015em] text-primary">
               Leziz
             </Link>
           </div>
           <div className="hidden md:flex items-center gap-6 lg:gap-9">
             <Link 
               href="/" 
-              className="text-sm font-medium leading-normal transition-colors" 
-              style={{ color: 'var(--text-primary)' }} 
-              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} 
-              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+              className="text-sm font-medium leading-normal transition-colors text-primary hover-link"
             >
               Anasayfa
             </Link>
             <Link 
               href="/recipes" 
-              className="text-sm font-medium leading-normal transition-colors" 
-              style={{ color: 'var(--text-primary)' }} 
-              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} 
-              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+              className="text-sm font-medium leading-normal transition-colors text-primary hover-link"
             >
               Tarifler
             </Link>
             <Link 
               href="/categories" 
-              className="text-sm font-medium leading-normal transition-colors" 
-              style={{ color: 'var(--text-primary)' }} 
-              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} 
-              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+              className="text-sm font-medium leading-normal transition-colors text-primary hover-link"
             >
               Kategoriler
             </Link>
             <Link 
               href="/about" 
-              className="text-sm font-medium leading-normal transition-colors" 
-              style={{ color: 'var(--text-primary)' }} 
-              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--accent)'} 
-              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+              className="text-sm font-medium leading-normal transition-colors text-primary hover-link"
             >
               Hakkımızda
             </Link>
@@ -104,8 +93,7 @@ export default function Header() {
           <label className="flex flex-col min-w-32 md:min-w-40 !h-10 max-w-64">
             <div className="flex w-full flex-1 items-stretch rounded-xl h-full">
               <div
-                className="flex border-none items-center justify-center pl-4 rounded-l-xl border-r-0"
-                style={{ backgroundColor: 'var(--card-bg)', color: 'var(--text-secondary)' }}
+                className="flex border-none items-center justify-center pl-4 rounded-l-xl border-r-0 bg-card text-secondary"
                 data-icon="MagnifyingGlass"
                 data-size="24px"
                 data-weight="regular"
@@ -118,8 +106,7 @@ export default function Header() {
               </div>
               <input
                 placeholder="Ara"
-                className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl focus:outline-0 focus:ring-0 border-none focus:border-none h-full px-4 rounded-l-none border-l-0 pl-2 text-sm md:text-base font-normal leading-normal"
-                style={{ backgroundColor: 'var(--card-bg)', color: 'var(--text-primary)' }}
+                className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl focus:outline-0 focus:ring-0 border-none focus:border-none h-full px-4 rounded-l-none border-l-0 pl-2 text-sm md:text-base font-normal leading-normal bg-card text-primary"
               />
             </div>
           </label>
@@ -127,10 +114,7 @@ export default function Header() {
           {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            className="flex min-w-[40px] max-w-[40px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-3 transition-colors"
-            style={{ backgroundColor: 'var(--card-bg)', color: 'var(--text-primary)' }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--card-hover)'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--card-bg)'}
+            className="flex min-w-[40px] max-w-[40px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-3 transition-colors bg-card text-primary hover-card"
           >
             {theme === 'light' ? (
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
@@ -149,19 +133,13 @@ export default function Header() {
             <div className="flex gap-2">
               <button 
                 onClick={openRegisterModal}
-                className="flex min-w-[70px] md:min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-3 md:px-4 text-xs md:text-sm font-bold leading-normal tracking-[0.015em] transition-colors" 
-                style={{ backgroundColor: 'var(--accent)', color: '#fcf9f8' }} 
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--accent-hover)'} 
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--accent)'}
+                className="flex min-w-[70px] md:min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-3 md:px-4 text-xs md:text-sm font-bold leading-normal tracking-[0.015em] transition-colors bg-accent text-white hover-accent" 
               >
                 <span className="truncate">Kayıt Ol</span>
               </button>
               <button 
                 onClick={openLoginModal}
-                className="flex min-w-[70px] md:min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-3 md:px-4 text-xs md:text-sm font-bold leading-normal tracking-[0.015em] transition-colors" 
-                style={{ backgroundColor: 'var(--card-bg)', color: 'var(--text-primary)' }} 
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--card-hover)'} 
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--card-bg)'}
+                className="flex min-w-[70px] md:min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-3 md:px-4 text-xs md:text-sm font-bold leading-normal tracking-[0.015em] transition-colors bg-card text-primary hover-card" 
               >
                 <span className="truncate">Giriş Yap</span>
               </button>
@@ -171,10 +149,10 @@ export default function Header() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-2 px-3 py-2 rounded-xl transition-colors h-10">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium" style={{ backgroundColor: 'var(--accent)', color: '#fcf9f8' }}>
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium bg-accent text-white">
                     {user?.user_metadata?.full_name?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
                   </div>
-                  <span className="hidden md:block text-sm font-medium truncate max-w-24">
+                  <span className="hidden md:block text-sm font-medium truncate max-w-24 text-primary">
                     {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User'}
                   </span>
                   <svg 
@@ -183,6 +161,7 @@ export default function Header() {
                     height="16" 
                     fill="currentColor" 
                     viewBox="0 0 256 256"
+                    className="text-primary"
                   >
                     <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,133.66,90.34L128,95.92l-5.66-5.58A8,8,0,0,1,133.66,90.34Z"></path>
                   </svg>
