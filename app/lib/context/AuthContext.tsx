@@ -9,6 +9,8 @@ interface AuthContextType {
   session: Session | null;
   isAuthenticated: boolean;
   signInWithGoogle: () => Promise<{ error: AuthError | null }>;
+  signInWithGitHub: () => Promise<{ error: AuthError | null }>;
+  signInWithFacebook: () => Promise<{ error: AuthError | null }>;
   signOut: () => Promise<{ error: AuthError | null }>;
   isLoading: boolean;
 }
@@ -54,6 +56,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { error };
   };
 
+  const signInWithGitHub = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`
+      }
+    });
+    return { error };
+  };
+
+  const signInWithFacebook = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'facebook',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`
+      }
+    });
+    return { error };
+  };
+
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     return { error };
@@ -64,6 +86,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     session,
     isAuthenticated: !!user,
     signInWithGoogle,
+    signInWithGitHub,
+    signInWithFacebook,
     signOut,
     isLoading
   };

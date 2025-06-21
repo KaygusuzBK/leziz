@@ -41,6 +41,7 @@ export default function RootLayout({
               <Header />
               <main className="flex h-full grow flex-col">
                 {children}
+                import { Analytics } from "@vercel/analytics/next"
               </main>
               <Footer />
               <DeveloperBar />
