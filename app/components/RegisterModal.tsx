@@ -1,8 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { toast } from 'sonner';
 import Modal from './Modal';
 import { useAuth } from '../lib/context/AuthContext';
+import { signUpWithEmail } from '../lib/auth/authentication';
+import { updateUserProfile } from '../lib/auth/profile';
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -12,13 +15,12 @@ interface RegisterModalProps {
 
 export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: RegisterModalProps) {
   const [formData, setFormData] = useState({
-    name: '',
+    full_name: '',
     email: '',
     password: '',
     confirmPassword: ''
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const { signInWithGoogle, signInWithGitHub, signInWithFacebook } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,24 +33,33 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Şifre kontrolü
     if (formData.password !== formData.confirmPassword) {
-      setError('Şifreler eşleşmiyor!');
+      toast.error('Şifreler eşleşmiyor!');
       return;
     }
     
     setIsLoading(true);
-    setError(null);
     
-    // Email/password registration için Supabase kullanılacak
-    // Şimdilik sadece OAuth kullanıyoruz
-    setError('Email/şifre kaydı henüz aktif değil. Lütfen sosyal medya ile kayıt olun.');
+    const result = await signUpWithEmail(formData.email, formData.password);
+
+    if (result.success && result.data?.user) {
+      // Update the user's profile with their full name
+      await updateUserProfile({
+        id: result.data.user.id,
+        data: { full_name: formData.full_name }
+      });
+      
+      toast.success('Kayıt başarılı! Lütfen e-postanızı kontrol edin.');
+      onClose();
+    } else {
+      toast.error(result.error || 'Kayıt olurken bir hata oluştu.');
+    }
+    
     setIsLoading(false);
   };
 
   const handleSocialRegister = async (provider: 'google' | 'github' | 'facebook') => {
     setIsLoading(true);
-    setError(null);
     
     try {
       let result;
@@ -67,12 +78,13 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
       }
       
       if (result.error) {
-        setError(result.error.message);
+        toast.error(result.error.message);
       } else {
+        toast.success('Yönlendiriliyorsunuz...');
         onClose();
       }
-    } catch (err) {
-      setError('Kayıt olurken bir hata oluştu.');
+    } catch (err: any) {
+      toast.error(err.message || 'Kayıt olurken bir hata oluştu.');
     } finally {
       setIsLoading(false);
     }
@@ -80,30 +92,23 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Kayıt Ol">
-      <div className="relative">
+      <div className="relative p-4">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5 pointer-events-none">
           <div className="absolute inset-0 bg-pattern"></div>
         </div>
         
         <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
-          {/* Error Message */}
-          {error && (
-            <div className="p-3 rounded-lg text-sm bg-red-100 text-red-600">
-              {error}
-            </div>
-          )}
-
           {/* Name Input */}
           <div>
-            <label htmlFor="name" className="block text-sm font-medium mb-2 text-primary">
+            <label htmlFor="full_name-register" className="block text-sm font-medium mb-2 text-primary">
               Ad Soyad
             </label>
             <input
               type="text"
-              id="name"
-              name="name"
-              value={formData.name}
+              id="full_name-register"
+              name="full_name"
+              value={formData.full_name}
               onChange={handleChange}
               required
               className="w-full px-4 py-3 rounded-xl border transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 bg-card text-primary border-card"
@@ -113,12 +118,12 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
 
           {/* Email Input */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-2 text-primary">
+            <label htmlFor="email-register" className="block text-sm font-medium mb-2 text-primary">
               E-posta
             </label>
             <input
               type="email"
-              id="email"
+              id="email-register"
               name="email"
               value={formData.email}
               onChange={handleChange}
@@ -130,12 +135,12 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
 
           {/* Password Input */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-2 text-primary">
+            <label htmlFor="password-register" className="block text-sm font-medium mb-2 text-primary">
               Şifre
             </label>
             <input
               type="password"
-              id="password"
+              id="password-register"
               name="password"
               value={formData.password}
               onChange={handleChange}
@@ -147,12 +152,12 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
 
           {/* Confirm Password Input */}
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium mb-2 text-primary">
+            <label htmlFor="confirmPassword-register" className="block text-sm font-medium mb-2 text-primary">
               Şifre Tekrar
             </label>
             <input
               type="password"
-              id="confirmPassword"
+              id="confirmPassword-register"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}

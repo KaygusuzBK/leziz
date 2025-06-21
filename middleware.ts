@@ -1,9 +1,11 @@
-import { createServerClient } from '@supabase/ssr';
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
   });
 
   const supabase = createServerClient(
@@ -14,31 +16,35 @@ export async function middleware(request: NextRequest) {
         get(name: string) {
           return request.cookies.get(name)?.value;
         },
-        set(name: string, value: string, options: any) {
+        set(name: string, value: string, options: CookieOptions) {
           request.cookies.set({
             name,
             value,
             ...options,
           });
-          supabaseResponse = NextResponse.next({
-            request,
+          response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
           });
-          supabaseResponse.cookies.set({
+          response.cookies.set({
             name,
             value,
             ...options,
           });
         },
-        remove(name: string, options: any) {
+        remove(name: string, options: CookieOptions) {
           request.cookies.set({
             name,
             value: '',
             ...options,
           });
-          supabaseResponse = NextResponse.next({
-            request,
+          response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
           });
-          supabaseResponse.cookies.set({
+          response.cookies.set({
             name,
             value: '',
             ...options,
@@ -48,27 +54,11 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  // IMPORTANT: Avoid writing any logic between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
+  // This is the only thing the middleware should do:
+  // refresh the user session.
+  await supabase.auth.getUser();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  // If there's no user and the user is trying to access a protected route,
-  // redirect them to the login page
-  if (!user && request.nextUrl.pathname.startsWith('/profile')) {
-    return NextResponse.redirect(new URL('/', request.url));
-  }
-
-  // If there's a user and they're trying to access the login page,
-  // redirect them to the home page
-  if (user && request.nextUrl.pathname.startsWith('/auth')) {
-    return NextResponse.redirect(new URL('/', request.url));
-  }
-
-  return supabaseResponse;
+  return response;
 }
 
 export const config = {

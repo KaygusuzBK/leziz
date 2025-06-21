@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { toast } from 'sonner';
 import Modal from './Modal';
 import { useAuth } from '../lib/context/AuthContext';
+import { signInWithEmail } from '../lib/auth/authentication';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -14,24 +16,25 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const { signInWithGoogle, signInWithGitHub, signInWithFacebook } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(null);
     
-    // Email/password login için Supabase kullanılacak
-    // Şimdilik sadece OAuth kullanıyoruz
-    setError('Email/şifre girişi henüz aktif değil. Lütfen sosyal medya ile giriş yapın.');
+    const result = await signInWithEmail(email, password);
+
+    if (result.success) {
+      toast.success('Başarıyla giriş yapıldı!');
+      onClose();
+    } else {
+      toast.error(result.error || 'Giriş yapılırken bir hata oluştu.');
+    }
     setIsLoading(false);
   };
 
   const handleSocialLogin = async (provider: 'google' | 'github' | 'facebook') => {
     setIsLoading(true);
-    setError(null);
-    
     try {
       let result;
       switch (provider) {
@@ -49,12 +52,13 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
       }
       
       if (result.error) {
-        setError(result.error.message);
+        toast.error(result.error.message);
       } else {
+        toast.success('Yönlendiriliyorsunuz...');
         onClose();
       }
-    } catch (err) {
-      setError('Giriş yapılırken bir hata oluştu.');
+    } catch (err: any) {
+      toast.error(err.message || 'Giriş yapılırken bir hata oluştu.');
     } finally {
       setIsLoading(false);
     }
@@ -69,21 +73,14 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
         </div>
         
         <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
-          {/* Error Message */}
-          {error && (
-            <div className="p-3 rounded-lg text-sm bg-red-100 text-red-600">
-              {error}
-            </div>
-          )}
-
           {/* Email Input */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-2 text-primary">
+            <label htmlFor="email-login" className="block text-sm font-medium mb-2 text-primary">
               E-posta
             </label>
             <input
               type="email"
-              id="email"
+              id="email-login"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -94,12 +91,12 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
 
           {/* Password Input */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-2 text-primary">
+            <label htmlFor="password-login" className="block text-sm font-medium mb-2 text-primary">
               Şifre
             </label>
             <input
               type="password"
-              id="password"
+              id="password-login"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required

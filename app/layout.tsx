@@ -8,6 +8,7 @@ import Footer from "./components/Footer";
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import DeveloperBar from "./components/DeveloperBar";
+import { Toaster } from "sonner";
 
 const epilogue = Epilogue({
   variable: "--font-epilogue",
@@ -47,6 +48,7 @@ export default function RootLayout({
               <Header />
               <Analytics />
               <SpeedInsights />
+              <Toaster richColors position="top-right" />
               <main className="flex h-full grow flex-col">
                 {children}
                 
