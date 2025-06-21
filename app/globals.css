@@ -63,6 +63,75 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Utility Classes */
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.bg-card {
+  background-color: var(--card-bg);
+}
+
+.bg-card-hover {
+  background-color: var(--card-hover);
+}
+
+.bg-accent {
+  background-color: var(--accent);
+}
+
+.bg-accent-hover {
+  background-color: var(--accent-hover);
+}
+
+.bg-background {
+  background-color: var(--background);
+}
+
+.border-card {
+  border-color: var(--card-border);
+}
+
+.bg-pattern {
+  background-image: radial-gradient(circle at 25% 25%, var(--accent) 2px, transparent 2px),
+                    radial-gradient(circle at 75% 75%, var(--accent) 2px, transparent 2px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+}
+
+.bg-hero {
+  background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 25%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuCSGynRMJMNy_-sQqH4X7NjpLJyS65M4JLF-c9K0X2tOzxr-loC20PQmE4zLQ5iuppOT4QGCypbIg45jfQTSWT93Geow6CoiF-DHMaTEfLH5BlNbnh_3GSoJYVXEbFym5EOoacXGxqqJdFlAJxuaLRtFjUimxgmiyRHgxqYPRwBVnmEkVrSwhZ3Y27P5Qz5soBLzXoL4tykQpggcHFR3Pv4Ed6siWXGKGBHDo1eFNG4tJonvJLkpQwYgmGCdqhtNyG24XLhNCDx9JRU");
+}
+
+/* Hover effect classes */
+.hover-link {
+  transition: color 0.2s ease;
+}
+
+.hover-link:hover {
+  color: var(--accent) !important;
+}
+
+.hover-card {
+  transition: background-color 0.2s ease;
+}
+
+.hover-card:hover {
+  background-color: var(--card-hover) !important;
+}
+
+.hover-accent {
+  transition: background-color 0.2s ease;
+}
+
+.hover-accent:hover {
+  background-color: var(--accent-hover) !important;
+}
+
 /* Scrollbar hiding utilities */
 .scrollbar-hide {
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
