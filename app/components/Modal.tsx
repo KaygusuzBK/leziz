@@ -40,22 +40,18 @@ export default function Modal({ isOpen, onClose, children, title }: ModalProps) 
       
       {/* Modal Content */}
       <div 
-        className="relative w-full max-w-md mx-4 rounded-xl shadow-xl transition-all duration-300"
-        style={{ backgroundColor: 'var(--background)' }}
+        className="relative w-full max-w-md mx-4 rounded-xl shadow-xl transition-all duration-300 bg-background"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         {title && (
-          <div className="flex items-center justify-between p-6 border-b" style={{ borderColor: 'var(--card-border)' }}>
-            <h2 className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>
+          <div className="flex items-center justify-between p-6 border-b border-card">
+            <h2 className="text-xl font-bold text-primary">
               {title}
             </h2>
             <button
               onClick={onClose}
-              className="p-2 rounded-lg transition-colors hover:bg-opacity-10"
-              style={{ color: 'var(--text-secondary)', backgroundColor: 'var(--card-bg)' }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--card-hover)'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--card-bg)'}
+              className="p-2 rounded-lg transition-colors hover-card bg-card text-secondary"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
                 <path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path>
