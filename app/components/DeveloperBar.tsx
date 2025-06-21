@@ -4,8 +4,15 @@ import { useAuth } from '../lib/context/AuthContext';
 import { useTheme } from '../lib/context/ThemeContext';
 
 export default function DeveloperBar() {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, signOut } = useAuth();
   const { theme } = useTheme();
+
+  const handleLogout = async () => {
+    const { error } = await signOut();
+    if (error) {
+      console.error('Logout error:', error);
+    }
+  };
 
   if (!isAuthenticated) {
     return (
@@ -53,7 +60,7 @@ export default function DeveloperBar() {
           <span className="opacity-60">ID:</span> {user?.id}
         </div>
         <div className="text-xs">
-          <span className="opacity-60">Ad:</span> {user?.name}
+          <span className="opacity-60">Ad:</span> {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User'}
         </div>
         <div className="text-xs">
           <span className="opacity-60">Email:</span> {user?.email}
@@ -64,7 +71,7 @@ export default function DeveloperBar() {
       </div>
       
       <button
-        onClick={logout}
+        onClick={handleLogout}
         className="mt-3 w-full py-1 px-2 text-xs rounded-lg transition-colors"
         style={{ 
           backgroundColor: 'var(--accent)', 

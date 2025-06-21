@@ -1,19 +1,15 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatar?: string;
-}
+import { User, Session, AuthError } from '@supabase/supabase-js';
+import { getSupabaseClient } from '../supabase/client';
 
 interface AuthContextType {
   user: User | null;
+  session: Session | null;
   isAuthenticated: boolean;
-  login: (userData: User) => void;
-  logout: () => void;
+  signInWithGoogle: () => Promise<{ error: AuthError | null }>;
+  signOut: () => Promise<{ error: AuthError | null }>;
   isLoading: boolean;
 }
 
@@ -21,36 +17,54 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const supabase = getSupabaseClient();
 
   useEffect(() => {
-    // localStorage'dan kullanıcı bilgilerini al
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (error) {
-        console.error('Failed to parse user data:', error);
-      }
-    }
-    setIsLoading(false);
-  }, []);
+    // Mevcut session'ı al
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setSession(session);
+      setUser(session?.user ?? null);
+      setIsLoading(false);
+    };
 
-  const login = (userData: User) => {
-    setUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
+    getSession();
+
+    // Auth state değişikliklerini dinle
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        setIsLoading(false);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, [supabase.auth]);
+
+  const signInWithGoogle = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`
+      }
+    });
+    return { error };
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
+  const signOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    return { error };
   };
 
   const value = {
     user,
+    session,
     isAuthenticated: !!user,
-    login,
-    logout,
+    signInWithGoogle,
+    signOut,
     isLoading
   };
 

@@ -1,160 +1,106 @@
-# Supabase Kurulum ve Kullanım Kılavuzu
+# Supabase Kurulum Rehberi
 
-## Kurulum
+## 1. Supabase Projesi Oluşturma
 
-1. **Environment Değişkenlerini Ayarlayın**
+1. [Supabase Dashboard](https://supabase.com/dashboard)'a gidin
+2. "New Project" butonuna tıklayın
+3. Proje adını girin (örn: "leziz-app")
+4. Database şifresi belirleyin
+5. Region seçin (en yakın bölgeyi seçin)
+6. "Create new project" butonuna tıklayın
 
-`.env.local` dosyası oluşturun ve aşağıdaki değişkenleri ekleyin:
+## 2. Environment Variables
+
+Proje oluşturulduktan sonra, `.env.local` dosyası oluşturun ve aşağıdaki değişkenleri ekleyin:
 
 ```env
-# Zorunlu değişkenler
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-
-# Opsiyonel - Sadece server-side admin işlemleri için gerekli
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 ```
 
-**Not:** `SUPABASE_SERVICE_ROLE_KEY` sadece server-side admin işlemleri (örneğin RLS bypass) gerektiğinde kullanılır. Çoğu durumda sadece URL ve anon key yeterlidir.
+Bu değerleri Supabase Dashboard > Settings > API bölümünden bulabilirsiniz.
 
-2. **Supabase Projesi Oluşturun**
+## 3. Google OAuth Kurulumu
 
-- [Supabase Dashboard](https://supabase.com/dashboard) adresine gidin
-- Yeni proje oluşturun
-- Settings > API bölümünden URL ve anahtarları alın
+### 3.1 Google Cloud Console'da OAuth 2.0 Client ID Oluşturma
 
-## Kullanım
+1. [Google Cloud Console](https://console.cloud.google.com/)'a gidin
+2. Yeni bir proje oluşturun veya mevcut projeyi seçin
+3. "APIs & Services" > "Credentials" bölümüne gidin
+4. "Create Credentials" > "OAuth 2.0 Client IDs" seçin
+5. Application type olarak "Web application" seçin
+6. Authorized redirect URIs'e şunu ekleyin:
+   ```
+   https://your-project-ref.supabase.co/auth/v1/callback
+   ```
+7. Client ID ve Client Secret'ı not edin
 
-### Client-Side Kullanım
+### 3.2 Supabase'de Google Provider'ı Etkinleştirme
 
-```typescript
-import { getSupabaseClient } from '@/app/lib'
+1. Supabase Dashboard > Authentication > Providers
+2. Google provider'ını bulun ve "Enable" yapın
+3. Google Cloud Console'dan aldığınız Client ID ve Client Secret'ı girin
+4. "Save" butonuna tıklayın
 
-const supabase = getSupabaseClient()
+## 4. Database Schema (Opsiyonel)
 
-// Authentication
-const { data, error } = await supabase.auth.signInWithPassword({
-  email: 'user@example.com',
-  password: 'password'
-})
+Eğer kullanıcı profilleri için ek tablolar istiyorsanız:
 
-// Veri okuma
-const { data: users, error } = await supabase
-  .from('users')
-  .select('*')
+```sql
+-- Kullanıcı profilleri için tablo
+CREATE TABLE profiles (
+  id UUID REFERENCES auth.users(id) PRIMARY KEY,
+  full_name TEXT,
+  avatar_url TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
 
-// Veri ekleme
-const { data, error } = await supabase
-  .from('users')
-  .insert({ name: 'John Doe', email: 'john@example.com' })
-  .select()
+-- RLS (Row Level Security) etkinleştirme
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
-// Veri güncelleme
-const { data, error } = await supabase
-  .from('users')
-  .update({ name: 'Jane Doe' })
-  .eq('id', 'user-id')
-  .select()
+-- Kullanıcıların sadece kendi profillerini görebilmesi
+CREATE POLICY "Users can view own profile" ON profiles
+  FOR SELECT USING (auth.uid() = id);
 
-// Veri silme
-const { error } = await supabase
-  .from('users')
-  .delete()
-  .eq('id', 'user-id')
+-- Kullanıcıların kendi profillerini güncelleyebilmesi
+CREATE POLICY "Users can update own profile" ON profiles
+  FOR UPDATE USING (auth.uid() = id);
 
-// Real-time subscription
-const subscription = supabase
-  .channel('table-db-changes')
-  .on('postgres_changes', 
-    { event: '*', schema: 'public', table: 'users' },
-    (payload) => {
-      console.log('Change received!', payload)
-    }
-  )
-  .subscribe()
+-- Yeni kullanıcı kaydolduğunda otomatik profil oluşturma
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO public.profiles (id, full_name, avatar_url)
+  VALUES (new.id, new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'avatar_url');
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
 ```
 
-### Server-Side Kullanım
+## 5. Test Etme
 
-```typescript
-import { getSupabaseServerClient, createSupabaseServerClientWithAnon } from '@/app/lib'
+1. Uygulamayı başlatın: `npm run dev`
+2. "Giriş Yap" veya "Kayıt Ol" butonuna tıklayın
+3. "Google ile Giriş Yap" butonuna tıklayın
+4. Google hesabınızla giriş yapın
+5. Başarılı bir şekilde giriş yapıldığını kontrol edin
 
-// Admin yetkileri ile (SUPABASE_SERVICE_ROLE_KEY gerekli)
-export async function adminServerAction() {
-  const supabase = getSupabaseServerClient()
-  
-  const { data, error } = await supabase
-    .from('users')
-    .select('*')
-    
-  return { data, error }
-}
+## 6. Sorun Giderme
 
-// Anon key ile (SUPABASE_SERVICE_ROLE_KEY gerekli değil)
-export async function regularServerAction() {
-  const supabase = createSupabaseServerClientWithAnon()
-  
-  const { data, error } = await supabase
-    .from('users')
-    .select('*')
-    
-  return { data, error }
-}
-```
+### Yaygın Hatalar:
 
-## Service Role Key Ne Zaman Gerekli?
+1. **"Invalid redirect URI" hatası**: Google Cloud Console'da redirect URI'yi doğru şekilde ayarladığınızdan emin olun
+2. **"Client ID not found" hatası**: Supabase'de Google provider ayarlarını kontrol edin
+3. **Environment variables bulunamıyor**: `.env.local` dosyasının doğru konumda olduğundan emin olun
 
-`SUPABASE_SERVICE_ROLE_KEY` sadece aşağıdaki durumlarda gereklidir:
+### Debug İpuçları:
 
-1. **RLS (Row Level Security) Bypass**: RLS kurallarını atlayarak tüm verilere erişim
-2. **Admin İşlemleri**: Kullanıcı yetkilerini aşan işlemler
-3. **Sistem Yönetimi**: Kullanıcı hesaplarını yönetme, silme vb.
-
-**Çoğu durumda sadece anon key yeterlidir!**
-
-## Klasör Yapısı
-
-```
-app/lib/
-├── config/
-│   └── supabase.ts          # Konfigürasyon ayarları
-├── supabase/
-│   ├── client.ts           # Client-side client
-│   └── server.ts           # Server-side client
-├── types/
-│   └── supabase.ts         # TypeScript tipleri
-└── index.ts                # Ana export dosyası
-```
-
-## Tip Güvenliği
-
-Veritabanı tiplerini `app/lib/types/supabase.ts` dosyasında tanımlayın:
-
-```typescript
-export interface Database {
-  public: {
-    Tables: {
-      users: {
-        Row: {
-          id: string
-          email: string
-          name: string
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          email: string
-          name: string
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          email?: string
-          name?: string
-          created_at?: string
-        }
-      }
-    }
-  }
-}
-``` 
+- Browser console'da hataları kontrol edin
+- Supabase Dashboard > Logs bölümünde authentication loglarını inceleyin
+- Network tab'ında OAuth callback isteklerini kontrol edin 

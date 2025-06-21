@@ -17,7 +17,7 @@ import {
 
 export default function Header() {
   const { theme, toggleTheme } = useTheme();
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, signOut } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
@@ -36,8 +36,11 @@ export default function Header() {
     setIsRegisterModalOpen(false);
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    const { error } = await signOut();
+    if (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   return (
@@ -169,10 +172,10 @@ export default function Header() {
               <DropdownMenuTrigger asChild>
                 <button className="flex items-center gap-2 px-3 py-2 rounded-xl transition-colors h-10">
                   <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium" style={{ backgroundColor: 'var(--accent)', color: '#fcf9f8' }}>
-                    {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                    {user?.user_metadata?.full_name?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
                   </div>
                   <span className="hidden md:block text-sm font-medium truncate max-w-24">
-                    {user?.name}
+                    {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User'}
                   </span>
                   <svg 
                     xmlns="http://www.w3.org/2000/svg" 
@@ -188,7 +191,7 @@ export default function Header() {
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel>
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{user?.name}</p>
+                    <p className="text-sm font-medium leading-none">{user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User'}</p>
                     <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
                   </div>
                 </DropdownMenuLabel>
