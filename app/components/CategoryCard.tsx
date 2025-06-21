@@ -12,7 +12,7 @@ export default function CategoryCard({ image, title }: CategoryCardProps) {
       >
         <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
-      <p className="text-base font-medium leading-normal" style={{ color: 'var(--text-primary)' }}>{title}</p>
+      <p className="text-base font-medium leading-normal text-primary">{title}</p>
     </div>
   );
 } 

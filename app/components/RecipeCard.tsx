@@ -14,8 +14,8 @@ export default function RecipeCard({ image, title, description }: RecipeCardProp
         <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
       <div>
-        <p className="text-base font-medium leading-normal" style={{ color: 'var(--text-primary)' }}>{title}</p>
-        <p className="text-sm font-normal leading-normal" style={{ color: 'var(--text-secondary)' }}>{description}</p>
+        <p className="text-base font-medium leading-normal text-primary">{title}</p>
+        <p className="text-sm font-normal leading-normal text-secondary">{description}</p>
       </div>
     </div>
   );

@@ -17,12 +17,7 @@ export default function DeveloperBar() {
   if (!isAuthenticated) {
     return (
       <div 
-        className="fixed bottom-4 right-4 z-40 p-4 rounded-xl shadow-lg border max-w-xs"
-        style={{ 
-          backgroundColor: 'var(--card-bg)', 
-          borderColor: 'var(--card-border)',
-          color: 'var(--text-primary)'
-        }}
+        className="fixed bottom-4 right-4 z-40 p-4 rounded-xl shadow-lg border max-w-xs bg-card border-card text-primary"
       >
         <div className="flex items-center gap-3">
           <div className="w-3 h-3 rounded-full bg-red-500"></div>
@@ -40,12 +35,7 @@ export default function DeveloperBar() {
 
   return (
     <div 
-      className="fixed bottom-4 right-4 z-40 p-4 rounded-xl shadow-lg border max-w-xs"
-      style={{ 
-        backgroundColor: 'var(--card-bg)', 
-        borderColor: 'var(--card-border)',
-        color: 'var(--text-primary)'
-      }}
+      className="fixed bottom-4 right-4 z-40 p-4 rounded-xl shadow-lg border max-w-xs bg-card border-card text-primary"
     >
       <div className="flex items-center gap-3">
         <div className="w-3 h-3 rounded-full bg-green-500"></div>
@@ -72,13 +62,7 @@ export default function DeveloperBar() {
       
       <button
         onClick={handleLogout}
-        className="mt-3 w-full py-1 px-2 text-xs rounded-lg transition-colors"
-        style={{ 
-          backgroundColor: 'var(--accent)', 
-          color: '#fcf9f8' 
-        }}
-        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--accent-hover)'}
-        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--accent)'}
+        className="mt-3 w-full py-1 px-2 text-xs rounded-lg transition-colors bg-accent text-white hover-accent"
       >
         Çıkış Yap
       </button>
