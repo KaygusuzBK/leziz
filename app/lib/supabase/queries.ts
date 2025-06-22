@@ -12,11 +12,64 @@ async function executeQuery(query: any) {
 }
 
 /**
+ * Fetches a single recipe by ID.
+ * @param id - The recipe ID.
+ */
+export async function getRecipeById(id: string) {
+  const supabase = createServerClient();
+  const query = supabase
+    .from('recipes')
+    .select('*')
+    .eq('id', id)
+    .single();
+  return executeQuery(query);
+}
+
+/**
+ * Fetches all recipes from the database.
+ * @param limit - The number of recipes to fetch (optional).
+ */
+export async function getAllRecipes(limit?: number) {
+  const supabase = createServerClient();
+  let query = supabase
+    .from('recipes')
+    .select('*')
+    .order('created_at', { ascending: false });
+  
+  if (limit) {
+    query = query.limit(limit);
+  }
+  
+  const result = await executeQuery(query);
+  console.log('getAllRecipes result:', result);
+  return result;
+}
+
+/**
  * Fetches all categories from the database.
  */
 export async function getCategories() {
   const supabase = createServerClient();
   const query = supabase.from('categories').select('*').order('name', { ascending: true });
+  return executeQuery(query);
+}
+
+/**
+ * Fetches recipes by category.
+ * @param categoryId - The category ID to filter by.
+ * @param limit - The number of recipes to fetch.
+ */
+export async function getRecipesByCategory(categoryId: string, limit = 20) {
+  const supabase = createServerClient();
+  const query = supabase
+    .from('recipes')
+    .select(`
+      *,
+      recipe_categories!inner(category_id)
+    `)
+    .eq('recipe_categories.category_id', categoryId)
+    .order('created_at', { ascending: false })
+    .limit(limit);
   return executeQuery(query);
 }
 

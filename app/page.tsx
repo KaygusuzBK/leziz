@@ -37,7 +37,7 @@ export default async function Home() {
       {/* Featured Recipes */}
       {featuredRecipes && featuredRecipes.length > 0 && (
         <>
-          <SectionTitle title="Öne Çıkan Tarifler" />
+          <SectionTitle title="Öne Çıkan Tarifler" showWebhookButton={true} />
           <div className="flex overflow-x-auto scrollbar-hide">
             <div className="flex items-stretch p-4 gap-3 min-w-full">
               {featuredRecipes.map((recipe) => (
