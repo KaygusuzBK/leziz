@@ -3,57 +3,72 @@
 @tailwind utilities;
 
 :root {
-  --background: 0 0% 100%;
-  --foreground: 20 14.3% 4.1%;
+  --background-hsl: 0 0% 100%;
+  --foreground-hsl: 20 14.3% 4.1%;
+
   --card-bg: #f3eae7;
   --card-border: #f3eae7;
   --text-primary: #1b110d;
   --text-secondary: #9a5e4c;
-  --accent: #ef6a42;
+  --accent-color: #ef6a42;
   --accent-hover: #d55a38;
   --card-hover: #e8dcd8;
   --radius: 0.5rem;
+
+  /* Radix/ShadCN Semantic Colors */
+  --background: var(--background-hsl);
+  --foreground: var(--foreground-hsl);
+  --muted: 220 13% 91%; /* Lighter gray for muted text */
+  --muted-foreground: 220 10% 40%;
+  --popover: var(--background-hsl);
+  --popover-foreground: var(--foreground-hsl);
+  --card: var(--background-hsl);
+  --card-foreground: var(--foreground-hsl);
   --border: 220 13% 91%;
-  --input: 220 13% 91%;
-  --ring: 224 71.4% 4.1%;
-  --primary: 24 100% 50%;
-  --primary-foreground: 60 9.1% 97.8%;
-  --secondary: 60 4.8% 95.9%;
-  --secondary-foreground: 24 9.8% 10%;
+  --input: 220 13% 85%;
+  --primary: 24 95% 59%; /* Mapped to accent color */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 220 13% 91%;
+  --secondary-foreground: 20 14.3% 4.1%;
+  --accent: 220 13% 91%; /* Mapped to a neutral hover */
+  --accent-foreground: 20 14.3% 4.1%;
   --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 60 9.1% 97.8%;
-  --muted: 60 4.8% 95.9%;
-  --muted-foreground: 25 5.3% 44.7%;
-  --accent-foreground: 60 9.1% 97.8%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 24 9.8% 10%;
+  --destructive-foreground: 0 0% 100%;
+  --ring: 24 95% 59%; /* Mapped to accent color */
 }
 
 .dark {
-  --background: 20 14.3% 4.1%;
-  --foreground: 0 0% 100%;
+  --background-hsl: 20 14.3% 4.1%;
+  --foreground-hsl: 0 0% 100%;
+
   --card-bg: #1a1a1a;
   --card-border: #2a2a2a;
   --text-primary: #f3f3f3;
   --text-secondary: #a0a0a0;
-  --accent: #ef6a42;
+  --accent-color: #ef6a42;
   --accent-hover: #d55a38;
   --card-hover: #2a2a2a;
-  --radius: 0.5rem;
+
+  /* Radix/ShadCN Semantic Colors */
+  --background: var(--background-hsl);
+  --foreground: var(--foreground-hsl);
+  --muted: 220 13% 18%;
+  --muted-foreground: 220 10% 60%;
+  --popover: 20 14.3% 8%; /* Slightly lighter than background for dark popovers */
+  --popover-foreground: var(--foreground-hsl);
+  --card: var(--background-hsl);
+  --card-foreground: var(--foreground-hsl);
   --border: 220 13% 18%;
-  --input: 220 13% 18%;
-  --ring: 224 71.4% 4.1%;
-  --primary: 24 100% 50%;
-  --primary-foreground: 60 9.1% 97.8%;
-  --secondary: 60 4.8% 20%;
-  --secondary-foreground: 60 9.1% 97.8%;
+  --input: 220 13% 25%;
+  --primary: 24 95% 59%; /* Mapped to accent color */
+  --primary-foreground: 0 0% 100%;
+  --secondary: 220 13% 18%;
+  --secondary-foreground: 0 0% 100%;
+  --accent: 220 13% 18%; /* Mapped to a neutral hover */
+  --accent-foreground: 0 0% 100%;
   --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 60 9.1% 97.8%;
-  --muted: 60 4.8% 20%;
-  --muted-foreground: 24 5.4% 63.9%;
-  --accent-foreground: 60 9.1% 97.8%;
-  --popover: 224 71.4% 4.1%;
-  --popover-foreground: 60 9.1% 97.8%;
+  --destructive-foreground: 0 0% 100%;
+  --ring: 24 95% 59%; /* Mapped to accent color */
 }
 
 body {
@@ -80,8 +95,8 @@ body {
   background-color: var(--card-hover);
 }
 
-.bg-accent {
-  background-color: var(--accent);
+.bg-accent-custom {
+  background-color: var(--accent-color);
 }
 
 .bg-accent-hover {
@@ -97,8 +112,8 @@ body {
 }
 
 .bg-pattern {
-  background-image: radial-gradient(circle at 25% 25%, var(--accent) 2px, transparent 2px),
-                    radial-gradient(circle at 75% 75%, var(--accent) 2px, transparent 2px);
+  background-image: radial-gradient(circle at 25% 25%, var(--accent-color) 2px, transparent 2px),
+                    radial-gradient(circle at 75% 75%, var(--accent-color) 2px, transparent 2px);
   background-size: 40px 40px;
   background-position: 0 0, 20px 20px;
 }
@@ -113,7 +128,7 @@ body {
 }
 
 .hover-link:hover {
-  color: var(--accent) !important;
+  color: var(--accent-color) !important;
 }
 
 .hover-card {
@@ -159,6 +174,6 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
+  background: var(--accent-color);
 }
 

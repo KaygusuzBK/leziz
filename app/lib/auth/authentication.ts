@@ -52,6 +52,28 @@ export const signUpWithEmail = async (email: string, password: string): Promise<
       }
     }
 
+    if (data.user) {
+      // After successful sign-up, create a profile entry
+      const { error: profileError } = await supabase
+        .from('user_profiles')
+        .insert({
+          id: data.user.id,
+          email: data.user.email
+        });
+
+      if (profileError) {
+        // If profile creation fails, we might want to handle this,
+        // but for now, we'll log it and proceed.
+        // In a real-world app, you might want to delete the auth user
+        // or queue a retry.
+        console.error('Error creating user profile:', profileError);
+        return {
+          success: false,
+          error: 'User created, but profile creation failed.'
+        };
+      }
+    }
+
     return {
       success: true,
       data: {

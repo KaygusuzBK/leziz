@@ -8,6 +8,17 @@ const supabase = getSupabaseClient()
  */
 export const getUserProfile = async (userId: string): Promise<AuthResult> => {
   try {
+    // Önce mevcut kullanıcı bilgilerini al
+    const { data: { user } } = await supabase.auth.getUser()
+    
+    if (!user) {
+      return {
+        success: false,
+        error: 'Kullanıcı bulunamadı'
+      }
+    }
+
+    // user_profiles tablosundan profil bilgilerini al
     const { data, error } = await supabase
       .from('user_profiles')
       .select('*')
@@ -18,6 +29,35 @@ export const getUserProfile = async (userId: string): Promise<AuthResult> => {
       return {
         success: false,
         error: error.message
+      }
+    }
+
+    // Eğer profil yoksa, otomatik olarak oluştur
+    if (!data) {
+      const { data: newProfile, error: createError } = await supabase
+        .from('user_profiles')
+        .insert({
+          id: user.id,
+          email: user.email,
+          full_name: user.user_metadata?.full_name || user.user_metadata?.name || '',
+          bio: '',
+          location: '',
+          website: '',
+          avatar_url: user.user_metadata?.avatar_url || ''
+        })
+        .select()
+        .single()
+
+      if (createError) {
+        return {
+          success: false,
+          error: createError.message
+        }
+      }
+
+      return {
+        success: true,
+        data: newProfile
       }
     }
 
@@ -47,22 +87,28 @@ export const updateUserProfile = async (updates: UserProfileUpdates): Promise<Au
       }
     }
 
-    // Önce user_profiles tablosunu güncelle
+    // Güncellenecek verileri hazırla
+    const updateData: any = {
+      id: user.id,
+      email: user.email
+    }
+
+    // Sadece değişen alanları ekle
+    if (updates.data?.full_name !== undefined) updateData.full_name = updates.data.full_name
+    if (updates.data?.bio !== undefined) updateData.bio = updates.data.bio
+    if (updates.data?.location !== undefined) updateData.location = updates.data.location
+    if (updates.data?.website !== undefined) updateData.website = updates.data.website
+    if (updates.data?.avatar_url !== undefined) updateData.avatar_url = updates.data.avatar_url
+
+    // user_profiles tablosunu güncelle (upsert ile)
     const { data, error } = await supabase
       .from('user_profiles')
-      .upsert({
-        id: user.id,
-        email: user.email,
-        full_name: updates.data?.full_name,
-        bio: updates.data?.bio,
-        location: updates.data?.location,
-        website: updates.data?.website,
-        avatar_url: updates.data?.avatar_url
-      })
+      .upsert(updateData)
       .select()
       .single()
 
     if (error) {
+      console.error('Profile update error:', error)
       return {
         success: false,
         error: error.message
@@ -70,7 +116,7 @@ export const updateUserProfile = async (updates: UserProfileUpdates): Promise<Au
     }
 
     // Eğer email güncellenecekse auth.users tablosunu da güncelle
-    if (updates.email) {
+    if (updates.email && updates.email !== user.email) {
       const { error: authError } = await supabase.auth.updateUser({
         email: updates.email
       })
@@ -91,6 +137,7 @@ export const updateUserProfile = async (updates: UserProfileUpdates): Promise<Au
       }
     }
   } catch (error: any) {
+    console.error('Profile update exception:', error)
     return {
       success: false,
       error: error.message || 'Kullanıcı bilgileri güncellenirken bir hata oluştu'
