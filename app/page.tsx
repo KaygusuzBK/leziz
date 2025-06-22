@@ -4,6 +4,25 @@ import CategoryCard from "./components/CategoryCard";
 import { getCategories, getFeaturedRecipes, getLatestRecipes } from "./lib/supabase/queries";
 import { toast } from "sonner";
 
+type Recipe = {
+  id: string;
+  title: string;
+  description?: string;
+  image_url?: string;
+  cooking_time?: number;
+  difficulty?: string;
+  servings?: number;
+  created_at: string;
+};
+
+type Category = {
+  id: string;
+  name: string;
+  description?: string;
+  image_url?: string;
+  created_at?: string;
+};
+
 export default async function Home() {
 
   const { data: featuredRecipes, error: featuredError } = await getFeaturedRecipes();
@@ -40,7 +59,7 @@ export default async function Home() {
           <SectionTitle title="Öne Çıkan Tarifler" showWebhookButton={true} />
           <div className="flex overflow-x-auto scrollbar-hide">
             <div className="flex items-stretch p-4 gap-3 min-w-full">
-              {featuredRecipes.map((recipe) => (
+              {featuredRecipes.map((recipe: Recipe) => (
                 <RecipeCard key={recipe.id} {...recipe} />
               ))}
             </div>
@@ -53,7 +72,7 @@ export default async function Home() {
         <>
           <SectionTitle title="En Yeni Tarifler" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 p-4">
-            {latestRecipes.map((recipe) => (
+            {latestRecipes.map((recipe: Recipe) => (
               <RecipeCard key={recipe.id} {...recipe} />
             ))}
           </div>
@@ -66,7 +85,7 @@ export default async function Home() {
         <>
           <SectionTitle title="Popüler Kategoriler" />
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4">
-            {categories.map((cat) => (
+            {categories.map((cat: Category) => (
               <CategoryCard key={cat.id} {...cat} />
             ))}
           </div>

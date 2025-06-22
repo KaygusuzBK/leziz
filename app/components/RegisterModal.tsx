@@ -45,7 +45,6 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
     if (result.success && result.data?.user) {
       // Update the user's profile with their full name
       await updateUserProfile({
-        id: result.data.user.id,
         data: { full_name: formData.full_name }
       });
       

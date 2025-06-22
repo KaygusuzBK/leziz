@@ -3,13 +3,14 @@ import { getRecipeById } from '../../lib/supabase/queries'
 import Link from 'next/link'
 
 interface RecipeDetailPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export default async function RecipeDetailPage({ params }: RecipeDetailPageProps) {
-  const { data: recipe, error } = await getRecipeById(params.id)
+  const { id } = await params
+  const { data: recipe, error } = await getRecipeById(id)
 
   if (error || !recipe) {
     notFound()

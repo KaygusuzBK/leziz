@@ -2,6 +2,14 @@ import { getCategories } from '../lib/supabase/queries'
 import CategoryCard from '../components/CategoryCard'
 import SectionTitle from '../components/SectionTitle'
 
+type Category = {
+  id: string;
+  name: string;
+  description?: string;
+  image_url?: string;
+  created_at?: string;
+};
+
 export default async function KategorilerPage() {
   const { data: categories, error } = await getCategories()
 
@@ -22,7 +30,7 @@ export default async function KategorilerPage() {
       
       {categories && categories.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {categories.map((category) => (
+          {categories.map((category: Category) => (
             <CategoryCard key={category.id} {...category} />
           ))}
         </div>
