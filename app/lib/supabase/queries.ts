@@ -17,12 +17,15 @@ async function executeQuery(query: any) {
  */
 export async function getRecipeById(id: string) {
   const supabase = createServerClient();
-  const query = supabase
-    .from('recipes')
-    .select('*')
-    .eq('id', id)
-    .single();
-  return executeQuery(query);
+  // Önce user_recipes tablosunda ara
+  let { data, error } = await supabase.from('user_recipes').select('*').eq('id', id).single();
+  if (!data || error) {
+    // recipes tablosunda ara
+    const { data: data2, error: error2 } = await supabase.from('recipes').select('*').eq('id', id).single();
+    if (data2) return { data: data2, error: null };
+    return { data: null, error: error2 };
+  }
+  return { data, error: null };
 }
 
 /**
