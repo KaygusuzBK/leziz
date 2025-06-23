@@ -127,14 +127,17 @@ export default function CreateRecipeModal({ isOpen, onClose, onSuccess }: Create
       const supabase = createSupabaseClient()
       const fileExt = file.name.split('.').pop()
       const fileName = `${user?.id}_${Date.now()}.${fileExt}`
-      const { data, error } = await supabase.storage.from('recipe-images').upload(fileName, file)
-      if (error) throw error
+      // Aynı isimde dosya varsa sil
+      await supabase.storage.from('recipe-images').remove([fileName])
+      // Yükle
+      const { error: uploadError } = await supabase.storage.from('recipe-images').upload(fileName, file, { upsert: true })
+      if (uploadError) throw uploadError
+      // Public URL al
       const { data: publicUrlData } = supabase.storage.from('recipe-images').getPublicUrl(fileName)
-      if (publicUrlData?.publicUrl) {
-        setFormData(prev => ({ ...prev, image_url: publicUrlData.publicUrl }))
-      }
-    } catch (err) {
-      alert('Fotoğraf yüklenirken bir hata oluştu.')
+      if (!publicUrlData?.publicUrl) throw new Error('Public URL alınamadı')
+      setFormData(prev => ({ ...prev, image_url: publicUrlData.publicUrl }))
+    } catch (err: any) {
+      alert('Fotoğraf yüklenirken bir hata oluştu: ' + (err?.message || ''))
     } finally {
       setImageUploading(false)
     }
