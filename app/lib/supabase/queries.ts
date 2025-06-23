@@ -29,20 +29,29 @@ export async function getRecipeById(id: string) {
  * Fetches all recipes from the database.
  * @param limit - The number of recipes to fetch (optional).
  */
-export async function getAllRecipes(limit?: number) {
+export async function getAllRecipes() {
   const supabase = createServerClient();
-  let query = supabase
+  // recipes tablosundaki public tarifler
+  const { data: recipes, error: recipesError } = await supabase
     .from('recipes')
     .select('*')
+    .eq('is_public', true)
     .order('created_at', { ascending: false });
-  
-  if (limit) {
-    query = query.limit(limit);
+  // user_recipes tablosundaki public tarifler
+  const { data: userRecipes, error: userRecipesError } = await supabase
+    .from('user_recipes')
+    .select('*')
+    .eq('is_public', true)
+    .order('created_at', { ascending: false });
+  // Hataları birleştir
+  if (recipesError && userRecipesError) {
+    return { data: [], error: recipesError.message + ' / ' + userRecipesError.message };
   }
-  
-  const result = await executeQuery(query);
-  console.log('getAllRecipes result:', result);
-  return result;
+  // Tüm tarifleri birleştir
+  const all = [...(recipes || []), ...(userRecipes || [])];
+  // Tarihe göre sırala
+  all.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  return { data: all, error: null };
 }
 
 /**
