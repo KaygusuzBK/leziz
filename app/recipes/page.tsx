@@ -13,16 +13,22 @@ export default function RecipesPage() {
     async function fetchRecipes() {
       setLoading(true);
       const supabase = createSupabaseClient();
-      const { data, error } = await supabase
+      // user_recipes tablosu
+      const { data: userRecipes, error: userRecipesError } = await supabase
         .from("user_recipes")
         .select("*")
         .eq("is_public", true)
         .order("created_at", { ascending: false });
-      if (error) {
-        setRecipes([]);
-      } else {
-        setRecipes(data || []);
-      }
+      // recipes tablosu
+      const { data: recipesData, error: recipesError } = await supabase
+        .from("recipes")
+        .select("*")
+        .eq("is_public", true)
+        .order("created_at", { ascending: false });
+      // Birleştir ve sırala
+      const all = [...(userRecipes || []), ...(recipesData || [])];
+      all.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      setRecipes(all);
       setLoading(false);
     }
     fetchRecipes();
