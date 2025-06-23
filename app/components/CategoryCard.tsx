@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 type CategoryCardProps = {
   id: string;
   name: string;
@@ -8,7 +10,7 @@ type CategoryCardProps = {
 
 export default function CategoryCard({ id, name, description, image_url }: CategoryCardProps) {
   return (
-    <div className="flex flex-col gap-3 pb-3 group cursor-pointer">
+    <Link href={`/recipes?category=${id}`} className="flex flex-col gap-3 pb-3 group cursor-pointer hover:scale-105 transition-transform">
       <div
         className="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl transition-transform duration-300 group-hover:scale-105 group-hover:z-10 relative overflow-hidden"
         style={{ 
@@ -24,10 +26,10 @@ export default function CategoryCard({ id, name, description, image_url }: Categ
           </div>
         )}
       </div>
-      <p className="text-base font-medium leading-normal text-gray-800">{name}</p>
+      <p className="text-base font-medium leading-normal text-primary">{name}</p>
       {description && (
-        <p className="text-sm text-gray-600 line-clamp-2">{description}</p>
+        <p className="text-sm text-secondary line-clamp-2">{description}</p>
       )}
-    </div>
+    </Link>
   );
 } 
