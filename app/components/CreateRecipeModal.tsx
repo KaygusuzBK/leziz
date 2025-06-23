@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import Modal from './Modal'
 import { useAuth } from '../lib/context/AuthContext'
 import { createSupabaseClient } from '../lib/supabase/client'
+import { toast } from 'sonner'
 
 interface CreateRecipeModalProps {
   isOpen: boolean
@@ -107,12 +108,12 @@ export default function CreateRecipeModal({ isOpen, onClose, onSuccess }: Create
         video_url: '',
         is_public: true
       })
-      
+      toast.success('Tarif başarıyla oluşturuldu!')
       onSuccess?.()
       onClose()
     } catch (error) {
       console.error('Tarif oluşturma hatası:', error)
-      alert('Tarif oluşturulurken bir hata oluştu.')
+      toast.error('Tarif oluşturulurken bir hata oluştu.')
     } finally {
       setIsLoading(false)
     }
