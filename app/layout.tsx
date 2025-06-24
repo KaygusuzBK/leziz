@@ -3,6 +3,7 @@ import { Epilogue, Noto_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./lib/context/ThemeContext";
 import { AuthProvider } from "./lib/context/AuthContext";
+import { ThemeCustomizationProvider } from "./lib/context/ThemeCustomizationContext";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { Analytics } from "@vercel/analytics/next"
@@ -44,18 +45,20 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <AuthProvider>
-            <div className="relative flex size-full min-h-screen flex-col group/design-root overflow-x-hidden bg-background">
-              <Header />
-              <Analytics />
-              <SpeedInsights />
-              <Toaster richColors position="top-right" />
-              <main className="flex h-full grow flex-col">
-                {children}
-                
-              </main>
-              <Footer />
-              <DeveloperBar />
-            </div>
+            <ThemeCustomizationProvider>
+              <div className="relative flex size-full min-h-screen flex-col group/design-root overflow-x-hidden bg-background">
+                <Header />
+                <Analytics />
+                <SpeedInsights />
+                <Toaster richColors position="top-right" />
+                <main className="flex h-full grow flex-col">
+                  {children}
+                  
+                </main>
+                <Footer />
+                <DeveloperBar />
+              </div>
+            </ThemeCustomizationProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

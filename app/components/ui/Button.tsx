@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: 'primary' | 'secondary' | 'accent' | 'danger' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'accent' | 'danger' | 'ghost' | 'outline';
   size?: 'sm' | 'md' | 'lg';
   loading?: boolean;
   fullWidth?: boolean;
@@ -21,6 +21,7 @@ const variants = {
   accent: 'bg-accent text-accent-foreground hover:bg-accent/80',
   danger: 'bg-destructive text-destructive-foreground hover:bg-destructive/80',
   ghost: 'bg-transparent text-primary hover:bg-accent/10',
+  outline: 'border-2 border-border bg-transparent text-foreground hover:bg-accent/10 hover:border-accent',
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
