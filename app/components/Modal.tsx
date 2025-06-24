@@ -40,7 +40,7 @@ export default function Modal({ isOpen, onClose, children, title }: ModalProps) 
       
       {/* Modal Content */}
       <div 
-        className="relative w-full max-w-6xl mx-auto max-h-[85vh] rounded-2xl shadow-2xl transition-all duration-300 bg-card border border-card"
+        className="relative w-full max-w-3xl mx-auto max-h-[85vh] rounded-2xl shadow-2xl transition-all duration-300 bg-card border border-card"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
