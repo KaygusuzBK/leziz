@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { updateUserProfile } from '../lib/auth/profile'
+import { Button } from './ui/Button'
+import { Input, Textarea } from './ui/Input'
 
 interface ProfileData {
   id: string
@@ -68,23 +70,25 @@ export default function ProfileCard({ profile, onProfileUpdate }: ProfileCardPro
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-8">
+    <div className="bg-card rounded-lg shadow-lg p-8 border border-card">
       <div className="flex flex-col items-center mb-8">
         <img
           src={profile.avatar_url || 'https://i.pravatar.cc/150'}
           alt="Profile Avatar"
           className="w-32 h-32 rounded-full object-cover border-4 border-orange-200 shadow-lg mb-4"
         />
-        <h1 className="text-3xl font-bold text-gray-800">{profile.full_name || 'İsim Belirtilmemiş'}</h1>
-        <p className="text-md text-gray-600 mb-4">{profile.email}</p>
+        <h1 className="text-3xl font-bold text-primary">{profile.full_name || 'İsim Belirtilmemiş'}</h1>
+        <p className="text-md text-secondary mb-4">{profile.email}</p>
         
         {!isEditing && (
-          <button
+          <Button
             onClick={startEditing}
-            className="px-6 py-2 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors"
+            variant="accent"
+            size="md"
+            className="font-semibold"
           >
             Profili Düzenle
-          </button>
+          </Button>
         )}
       </div>
 
@@ -115,90 +119,79 @@ function ProfileEditForm({ formData, onInputChange, onSubmit, onCancel }: Profil
     <form onSubmit={onSubmit} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Ad Soyad
-          </label>
-          <input
+          <Input
             type="text"
             name="full_name"
             value={formData.full_name || ''}
             onChange={onInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900"
             placeholder="Adınız ve soyadınız"
+            className="mb-0"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Konum
-          </label>
-          <input
+          <Input
             type="text"
             name="location"
             value={formData.location || ''}
             onChange={onInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900"
             placeholder="Şehir, Ülke"
+            className="mb-0"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Website
-          </label>
-          <input
+          <Input
             type="url"
             name="website"
             value={formData.website || ''}
             onChange={onInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900"
             placeholder="https://example.com"
+            className="mb-0"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Avatar URL
-          </label>
-          <input
+          <Input
             type="url"
             name="avatar_url"
             value={formData.avatar_url || ''}
             onChange={onInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900"
             placeholder="https://example.com/avatar.jpg"
+            className="mb-0"
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Hakkımda
-        </label>
-        <textarea
+        <Textarea
           name="bio"
           value={formData.bio || ''}
           onChange={onInputChange}
           rows={4}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-900"
           placeholder="Kendiniz hakkında kısa bir açıklama..."
+          className="mb-0"
         />
       </div>
 
       <div className="flex gap-4">
-        <button
+        <Button
           type="submit"
-          className="px-6 py-2 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors"
+          variant="accent"
+          size="md"
+          className="font-semibold"
         >
           Kaydet
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
           onClick={onCancel}
-          className="px-6 py-2 bg-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-400 transition-colors"
+          variant="secondary"
+          size="md"
+          className="font-semibold"
         >
           İptal
-        </button>
+        </Button>
       </div>
     </form>
   )
@@ -212,29 +205,29 @@ interface ProfileInfoProps {
 function ProfileInfo({ profile }: ProfileInfoProps) {
   return (
     <div className="space-y-6">
-      <div className="bg-gray-50 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Hakkımda</h3>
-        <p className="text-gray-600">
+      <div className="bg-card rounded-lg p-6 border border-card">
+        <h3 className="text-lg font-semibold text-primary mb-4">Hakkımda</h3>
+        <p className="text-secondary">
           {profile.bio || 'Henüz bir biyografi eklenmemiş.'}
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {profile.location && (
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h4 className="font-semibold text-gray-800 mb-2">Konum</h4>
-            <p className="text-gray-600">{profile.location}</p>
+          <div className="bg-card rounded-lg p-4 border border-card">
+            <h4 className="font-semibold text-primary mb-2">Konum</h4>
+            <p className="text-secondary">{profile.location}</p>
           </div>
         )}
         
         {profile.website && (
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h4 className="font-semibold text-gray-800 mb-2">Website</h4>
+          <div className="bg-card rounded-lg p-4 border border-card">
+            <h4 className="font-semibold text-primary mb-2">Website</h4>
             <a 
               href={profile.website} 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="text-orange-500 hover:underline"
+              className="text-accent hover:underline"
             >
               {profile.website}
             </a>
@@ -242,13 +235,13 @@ function ProfileInfo({ profile }: ProfileInfoProps) {
         )}
       </div>
 
-      <div className="bg-gray-50 rounded-lg p-4">
-        <h4 className="font-semibold text-gray-800 mb-2">Hesap Bilgileri</h4>
-        <p className="text-gray-600">
+      <div className="bg-card rounded-lg p-4 border border-card">
+        <h4 className="font-semibold text-primary mb-2">Hesap Bilgileri</h4>
+        <p className="text-secondary">
           <span className="font-medium">Üye olma tarihi:</span> {new Date(profile.created_at).toLocaleDateString('tr-TR')}
         </p>
         {profile.updated_at !== profile.created_at && (
-          <p className="text-gray-600">
+          <p className="text-secondary">
             <span className="font-medium">Son güncelleme:</span> {new Date(profile.updated_at).toLocaleDateString('tr-TR')}
           </p>
         )}

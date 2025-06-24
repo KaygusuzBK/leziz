@@ -40,19 +40,19 @@ export default function Modal({ isOpen, onClose, children, title }: ModalProps) 
       
       {/* Modal Content */}
       <div 
-        className="relative w-full max-w-2xl mx-auto rounded-2xl shadow-2xl transition-all duration-300 bg-white border border-gray-100"
+        className="relative w-full max-w-6xl mx-auto max-h-[85vh] rounded-2xl shadow-2xl transition-all duration-300 bg-card border border-card"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         {title && (
-          <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-gradient-to-r from-orange-50 to-yellow-50 rounded-t-2xl">
+          <div className="flex items-center justify-between p-6 border-b border-card bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/40 dark:to-yellow-900/20 rounded-t-2xl">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center">
                 <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-gray-800">
+              <h2 className="text-2xl font-bold text-primary">
                 {title}
               </h2>
             </div>

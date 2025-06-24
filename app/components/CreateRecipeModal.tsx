@@ -5,6 +5,9 @@ import Modal from './Modal'
 import { useAuth } from '../lib/context/AuthContext'
 import { createSupabaseClient } from '../lib/supabase/client'
 import { toast } from 'sonner'
+import { Button } from './ui/Button'
+import { Input, Textarea } from './ui/Input'
+import { Chip } from './ui/Chip'
 
 interface CreateRecipeModalProps {
   isOpen: boolean
@@ -154,13 +157,13 @@ export default function CreateRecipeModal({ isOpen, onClose, onSuccess }: Create
               <label className="block text-sm font-medium mb-2 text-primary">
                 Tarif Adı *
               </label>
-              <input
+              <Input
                 type="text"
                 required
                 value={formData.title}
                 onChange={(e) => handleInputChange('title', e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 bg-card text-primary border-card"
                 placeholder="Örn: Ev Yapımı Pizza"
+                className="mb-0"
               />
             </div>
 
@@ -169,12 +172,12 @@ export default function CreateRecipeModal({ isOpen, onClose, onSuccess }: Create
               <label className="block text-sm font-medium mb-2 text-primary">
                 Açıklama
               </label>
-              <textarea
+              <Textarea
                 value={formData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
                 rows={2}
-                className="w-full px-3 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 bg-card text-primary border-card"
                 placeholder="Tarifiniz hakkında kısa bir açıklama..."
+                className="mb-0"
               />
             </div>
 
@@ -187,7 +190,7 @@ export default function CreateRecipeModal({ isOpen, onClose, onSuccess }: Create
                 required
                 value={formData.category_id}
                 onChange={(e) => handleInputChange('category_id', e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 bg-card text-primary border-card"
+                className="w-full px-3 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 bg-card text-primary border-card mb-0"
               >
                 <option value="">Kategori seçin</option>
                 {categories.map(category => (
@@ -204,41 +207,36 @@ export default function CreateRecipeModal({ isOpen, onClose, onSuccess }: Create
                 Malzemeler *
               </label>
               <div className="flex gap-2 mb-2">
-                <input
+                <Input
                   type="text"
                   value={currentIngredient}
                   onChange={(e) => setCurrentIngredient(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addIngredient())}
-                  className="flex-1 px-3 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 bg-card text-primary border-card"
                   placeholder="Malzeme ekle..."
+                  className="flex-1 mb-0"
                 />
-                <button
+                <Button
                   type="button"
                   onClick={addIngredient}
-                  className="px-3 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm"
+                  variant="accent"
+                  size="sm"
+                  className="text-sm"
                 >
                   Ekle
-                </button>
+                </Button>
               </div>
               
               {/* Seçili malzemeler */}
               <div className="flex flex-wrap gap-1">
                 {formData.ingredients.map((ingredient, index) => (
-                  <span
+                  <Chip
                     key={index}
-                    className="flex items-center gap-1 px-2 py-1 rounded-full bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-300 text-xs font-medium"
+                    color="accent"
+                    onRemove={() => removeIngredient(index)}
+                    className="text-xs font-medium"
                   >
                     {ingredient}
-                    <button
-                      type="button"
-                      onClick={() => removeIngredient(index)}
-                      className="ml-1 rounded-full hover:bg-orange-200 dark:hover:bg-orange-800 p-0.5"
-                    >
-                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 8.586l3.536-3.535a1 1 0 111.415 1.414L11.414 10l3.535 3.536a1 1 0 01-1.414 1.415L10 11.414l-3.536 3.535a1 1 0 01-1.415-1.414L8.586 10 5.05 6.464A1 1 0 016.464 5.05L10 8.586z" clipRule="evenodd" />
-                      </svg>
-                    </button>
-                  </span>
+                  </Chip>
                 ))}
               </div>
             </div>
@@ -248,13 +246,13 @@ export default function CreateRecipeModal({ isOpen, onClose, onSuccess }: Create
               <label className="block text-sm font-medium mb-2 text-primary">
                 Hazırlanış Adımları *
               </label>
-              <textarea
+              <Textarea
                 required
                 value={formData.instructions}
                 onChange={(e) => handleInputChange('instructions', e.target.value)}
                 rows={4}
-                className="w-full px-3 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 bg-card text-primary border-card"
                 placeholder="Tarifin hazırlanış adımlarını detaylı olarak yazın..."
+                className="mb-0"
               />
             </div>
 
@@ -265,12 +263,12 @@ export default function CreateRecipeModal({ isOpen, onClose, onSuccess }: Create
                 <label className="block text-sm font-medium mb-2 text-primary">
                   Pişirme Süresi (dk)
                 </label>
-                <input
+                <Input
                   type="number"
                   min="1"
                   value={formData.cooking_time}
                   onChange={(e) => handleInputChange('cooking_time', parseInt(e.target.value))}
-                  className="w-full px-3 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 bg-card text-primary border-card"
+                  className="mb-0"
                 />
               </div>
 
@@ -282,7 +280,7 @@ export default function CreateRecipeModal({ isOpen, onClose, onSuccess }: Create
                 <select
                   value={formData.difficulty_level}
                   onChange={(e) => handleInputChange('difficulty_level', e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 bg-card text-primary border-card"
+                  className="w-full px-3 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 bg-card text-primary border-card mb-0"
                 >
                   {DIFFICULTY_LEVELS.map(level => (
                     <option key={level} value={level}>{level}</option>
@@ -295,12 +293,12 @@ export default function CreateRecipeModal({ isOpen, onClose, onSuccess }: Create
                 <label className="block text-sm font-medium mb-2 text-primary">
                   Kaç Kişilik
                 </label>
-                <input
+                <Input
                   type="number"
                   min="1"
                   value={formData.servings}
                   onChange={(e) => handleInputChange('servings', parseInt(e.target.value))}
-                  className="w-full px-3 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 bg-card text-primary border-card"
+                  className="mb-0"
                 />
               </div>
 
@@ -312,7 +310,7 @@ export default function CreateRecipeModal({ isOpen, onClose, onSuccess }: Create
                 <select
                   value={formData.is_public ? 'public' : 'private'}
                   onChange={(e) => handleInputChange('is_public', e.target.value === 'public')}
-                  className="w-full px-3 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 bg-card text-primary border-card"
+                  className="w-full px-3 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 bg-card text-primary border-card mb-0"
                 >
                   <option value="public">Herkese Açık</option>
                   <option value="private">Sadece Ben</option>
@@ -327,7 +325,7 @@ export default function CreateRecipeModal({ isOpen, onClose, onSuccess }: Create
                   Fotoğraf Yükle
                 </label>
                 <div className="flex items-center gap-2">
-                  <input
+                  <Input
                     type="file"
                     accept="image/*"
                     ref={fileInputRef}
@@ -345,32 +343,36 @@ export default function CreateRecipeModal({ isOpen, onClose, onSuccess }: Create
                 <label className="block text-sm font-medium mb-2 text-primary">
                   Video URL'i
                 </label>
-                <input
+                <Input
                   type="url"
                   value={formData.video_url}
                   onChange={(e) => handleInputChange('video_url', e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 bg-card text-primary border-card"
                   placeholder="https://..."
+                  className="mb-0"
                 />
               </div>
             </div>
 
             {/* Butonlar */}
             <div className="flex justify-end gap-3 pt-4 sticky bottom-0 bg-card/80 backdrop-blur-sm">
-              <button
+              <Button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-lg bg-background border border-card text-primary hover:bg-card transition-colors text-sm"
+                variant="secondary"
+                size="md"
+                className="text-sm"
               >
                 İptal
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
-                disabled={isLoading}
-                className="px-4 py-2 rounded-lg bg-orange-500 text-white hover:bg-orange-600 transition-colors disabled:opacity-50 text-sm"
+                loading={isLoading}
+                variant="accent"
+                size="md"
+                className="text-sm"
               >
-                {isLoading ? 'Oluşturuluyor...' : 'Tarifi Oluştur'}
-              </button>
+                Tarifi Oluştur
+              </Button>
             </div>
           </form>
         </div>

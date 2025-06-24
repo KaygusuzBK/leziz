@@ -15,6 +15,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Button } from './ui/Button';
+import { Input } from './ui/Input';
 
 export default function Header() {
   const { theme, toggleTheme } = useTheme();
@@ -46,7 +48,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="flex items-center justify-between whitespace-nowrap border-b border-card px-4 md:px-10 py-3">
+      <header className="flex items-center justify-between whitespace-nowrap border-b border-card px-4 md:px-10 py-3 bg-background">
         <div className="flex items-center gap-4 md:gap-8">
           <div className="flex items-center gap-2 md:gap-4 text-primary">
             <div className="size-4">
@@ -104,7 +106,7 @@ export default function Header() {
                   ></path>
                 </svg>
               </div>
-              <input
+              <Input
                 placeholder="Ara"
                 className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl focus:outline-0 focus:ring-0 border-none focus:border-none h-full px-4 rounded-l-none border-l-0 pl-2 text-sm md:text-base font-normal leading-normal bg-card text-primary"
               />
@@ -112,9 +114,12 @@ export default function Header() {
           </label>
           
           {/* Theme Toggle Button */}
-          <button
+          <Button
             onClick={toggleTheme}
-            className="flex min-w-[40px] max-w-[40px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-3 transition-colors bg-card text-primary hover-card"
+            variant="secondary"
+            size="md"
+            className="min-w-[40px] max-w-[40px] h-10 px-3 rounded-xl bg-card text-primary hover-card"
+            aria-label="Tema Değiştir"
           >
             {theme === 'light' ? (
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 256 256">
@@ -125,30 +130,34 @@ export default function Header() {
                 <path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l16-16A8,8,0,0,0,69.66,42.34Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"></path>
               </svg>
             )}
-          </button>
+          </Button>
           
           {/* Auth Section - Conditional Rendering */}
           {!isAuthenticated ? (
             // Login/Register Buttons (when not authenticated)
             <div className="flex gap-2">
-              <button 
+              <Button 
                 onClick={openRegisterModal}
-                className="flex min-w-[70px] md:min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-3 md:px-4 text-xs md:text-sm font-bold leading-normal tracking-[0.015em] transition-colors bg-accent text-white hover-accent" 
+                variant="accent"
+                size="md"
+                className="min-w-[70px] md:min-w-[84px] max-w-[480px] h-10 px-3 md:px-4 text-xs md:text-sm font-bold leading-normal tracking-[0.015em]"
               >
                 <span className="truncate">Kayıt Ol</span>
-              </button>
-              <button 
+              </Button>
+              <Button 
                 onClick={openLoginModal}
-                className="flex min-w-[70px] md:min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-3 md:px-4 text-xs md:text-sm font-bold leading-normal tracking-[0.015em] transition-colors bg-card text-primary hover-card" 
+                variant="secondary"
+                size="md"
+                className="min-w-[70px] md:min-w-[84px] max-w-[480px] h-10 px-3 md:px-4 text-xs md:text-sm font-bold leading-normal tracking-[0.015em]"
               >
                 <span className="truncate">Giriş Yap</span>
-              </button>
+              </Button>
             </div>
           ) : (
             // User Menu (when authenticated) - Using shadcn/ui DropdownMenu
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2 px-3 py-2 rounded-xl transition-colors h-10">
+                <Button className="flex items-center gap-2 px-3 py-2 rounded-xl transition-colors h-10" variant="ghost" size="md">
                   <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium bg-accent text-white">
                     {user?.user_metadata?.full_name?.charAt(0)?.toUpperCase() || user?.email?.charAt(0)?.toUpperCase() || 'U'}
                   </div>
@@ -165,7 +174,7 @@ export default function Header() {
                   >
                     <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,133.66,90.34L128,95.92l-5.66-5.58A8,8,0,0,1,133.66,90.34Z"></path>
                   </svg>
-                </button>
+                </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel>
