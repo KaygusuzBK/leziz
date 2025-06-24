@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, Session, AuthError } from '@supabase/supabase-js';
 import { getSupabaseClient } from '../supabase/client';
+import { useUserStore } from '../store';
 
 interface AuthContextType {
   user: User | null;
@@ -22,6 +23,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const supabase = getSupabaseClient();
+  const zustandSetUser = useUserStore((state) => state.setUser);
+  const zustandLogout = useUserStore((state) => state.logout);
 
   useEffect(() => {
     // Mevcut session'ı al
@@ -29,6 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { data: { session } } = await supabase.auth.getSession();
       setSession(session);
       setUser(session?.user ?? null);
+      zustandSetUser(session?.user ?? null);
       setIsLoading(false);
     };
 
@@ -39,12 +43,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       async (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
+        zustandSetUser(session?.user ?? null);
         setIsLoading(false);
       }
     );
 
     return () => subscription.unsubscribe();
-  }, [supabase.auth]);
+  }, [supabase.auth, zustandSetUser]);
 
   const signInWithGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
@@ -78,6 +83,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
+    zustandLogout();
     return { error };
   };
 
