@@ -113,4 +113,81 @@ export async function getFeaturedRecipes(limit = 4) {
         .order('created_at', { ascending: true }) // Placeholder: oldest recipes
         .limit(limit);
     return executeQuery(query);
+}
+
+/**
+ * Bir kullanıcıyı takip et
+ */
+export async function followUser(followerId: string, followingId: string) {
+  const supabase = createServerClient();
+  const query = supabase.from('follows').insert({ follower_id: followerId, following_id: followingId });
+  return executeQuery(query);
+}
+
+/**
+ * Bir kullanıcıyı takipten çıkar
+ */
+export async function unfollowUser(followerId: string, followingId: string) {
+  const supabase = createServerClient();
+  const query = supabase.from('follows').delete().match({ follower_id: followerId, following_id: followingId });
+  return executeQuery(query);
+}
+
+/**
+ * Kullanıcı takip ediyor mu?
+ */
+export async function isFollowing(followerId: string, followingId: string) {
+  const supabase = createServerClient();
+  const query = supabase.from('follows').select('id').match({ follower_id: followerId, following_id: followingId }).single();
+  return executeQuery(query);
+}
+
+/**
+ * Bir kullanıcının takipçileri
+ */
+export async function getFollowers(userId: string) {
+  const supabase = createServerClient();
+  const query = supabase.from('follows').select('follower_id').eq('following_id', userId);
+  return executeQuery(query);
+}
+
+/**
+ * Bir kullanıcının takip ettikleri
+ */
+export async function getFollowing(userId: string) {
+  const supabase = createServerClient();
+  const query = supabase.from('follows').select('following_id').eq('follower_id', userId);
+  return executeQuery(query);
+}
+
+/**
+ * Bir tarife yorum ekle
+ */
+export async function addComment(recipeId: string, userId: string, content: string) {
+  const supabase = createServerClient();
+  const query = supabase.from('comments').insert({ recipe_id: recipeId, user_id: userId, content });
+  return executeQuery(query);
+}
+
+/**
+ * Bir yorumu sil
+ */
+export async function deleteComment(commentId: string, userId: string) {
+  const supabase = createServerClient();
+  // Sadece yorumu yazan kullanıcı silebilsin
+  const query = supabase.from('comments').delete().match({ id: commentId, user_id: userId });
+  return executeQuery(query);
+}
+
+/**
+ * Bir tarifin tüm yorumlarını getir (kullanıcı profiliyle birlikte)
+ */
+export async function getCommentsByRecipe(recipeId: string) {
+  const supabase = createServerClient();
+  const query = supabase
+    .from('comments')
+    .select('*, user_profiles: user_id (id, full_name, avatar_url)')
+    .eq('recipe_id', recipeId)
+    .order('created_at', { ascending: true });
+  return executeQuery(query);
 } 

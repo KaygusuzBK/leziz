@@ -1,6 +1,9 @@
 import { notFound } from 'next/navigation'
-import { getRecipeById } from '../../lib/supabase/queries'
+import { getRecipeById, getCommentsByRecipe } from '../../lib/supabase/queries'
+import { getUserProfile } from '../../lib/auth/profile'
 import Link from 'next/link'
+import Image from 'next/image'
+import CommentsSection from './CommentsSection'
 
 interface RecipeDetailPageProps {
   params: Promise<{
@@ -15,6 +18,18 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
   if (error || !recipe) {
     notFound()
   }
+
+  // Yemeği yapan kullanıcıyı getir
+  let authorProfile = null
+  if (recipe.user_id) {
+    const authorRes = await getUserProfile(recipe.user_id)
+    if (authorRes.success) {
+      authorProfile = authorRes.data
+    }
+  }
+
+  // Yorumları getir
+  const { data: comments } = await getCommentsByRecipe(id)
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -90,6 +105,25 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
               </div>
             </div>
           </div>
+
+          {/* Yemeği yapan kullanıcı */}
+          {authorProfile && (
+            <div className="flex items-center gap-3 mt-2">
+              <Image
+                src={authorProfile.avatar_url || '/default-avatar.png'}
+                alt={authorProfile.full_name || 'Kullanıcı'}
+                width={40}
+                height={40}
+                className="rounded-full border"
+              />
+              <div>
+                <Link href={`/profile/${authorProfile.id}`} className="font-semibold text-orange-600 hover:underline">
+                  {authorProfile.full_name || 'Kullanıcı'}
+                </Link>
+                <div className="text-xs text-gray-500">Tarifi Ekleyen</div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Recipe Content */}
@@ -144,6 +178,9 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
               </div>
             </div>
           )}
+
+          {/* Yorumlar ve Yorum Formu */}
+          <CommentsSection recipeId={id} />
 
           {/* Recipe Meta */}
           <div className="border-t pt-6">

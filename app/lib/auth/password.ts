@@ -1,5 +1,6 @@
 import { getSupabaseClient } from '../supabase/client'
 import type { AuthResult } from './types'
+import { getResetPasswordUrl } from '../config/supabase'
 
 const supabase = getSupabaseClient()
 
@@ -9,7 +10,7 @@ const supabase = getSupabaseClient()
 export const resetPassword = async (email: string): Promise<AuthResult> => {
   try {
     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/reset-password`
+      redirectTo: getResetPasswordUrl()
     })
 
     if (error) {

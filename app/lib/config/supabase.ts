@@ -4,6 +4,22 @@ export const supabaseConfig = {
   serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
 }
 
+// URL yönetimi için utility fonksiyonları
+export const getBaseUrl = (): string => {
+  const isDevelopment = process.env.NODE_ENV === 'development'
+  return isDevelopment 
+    ? 'http://localhost:3000' 
+    : 'https://leziz.vercel.app'
+}
+
+export const getAuthCallbackUrl = (): string => {
+  return `${getBaseUrl()}/auth/callback`
+}
+
+export const getResetPasswordUrl = (): string => {
+  return `${getBaseUrl()}/auth/reset-password`
+}
+
 // Temel environment değişkenlerinin varlığını kontrol et
 export const validateSupabaseConfig = (): boolean => {
   if (!supabaseConfig.url) {

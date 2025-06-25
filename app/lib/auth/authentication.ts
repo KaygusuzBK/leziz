@@ -1,5 +1,6 @@
 import { getSupabaseClient } from '../supabase/client'
 import type { AuthResult } from './types'
+import { getAuthCallbackUrl } from '../config/supabase'
 
 const supabase = getSupabaseClient()
 
@@ -42,7 +43,10 @@ export const signUpWithEmail = async (email: string, password: string): Promise<
   try {
     const { data, error } = await supabase.auth.signUp({
       email,
-      password
+      password,
+      options: {
+        emailRedirectTo: getAuthCallbackUrl()
+      }
     })
 
     if (error) {

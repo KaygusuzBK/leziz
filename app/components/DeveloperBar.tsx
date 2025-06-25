@@ -5,6 +5,7 @@ import { useAuth } from '../lib/context/AuthContext';
 import { useTheme } from '../lib/context/ThemeContext';
 import { Button } from './ui/Button';
 import { Card } from './ui/Card';
+import { testUrlConfiguration } from '../lib/config/url-test';
 
 export default function DeveloperBar() {
   const { user, isAuthenticated, signOut } = useAuth();
@@ -20,6 +21,12 @@ export default function DeveloperBar() {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
+  };
+
+  const handleUrlTest = () => {
+    const result = testUrlConfiguration();
+    console.log('URL Test Result:', result);
+    alert(`URL Test tamamlandı!\nBase URL: ${result.baseUrl}\nAuth Callback: ${result.authCallbackUrl}\nReset Password: ${result.resetPasswordUrl}`);
   };
 
   if (!isAuthenticated) {
@@ -161,7 +168,7 @@ export default function DeveloperBar() {
             {/* Quick Actions */}
             <div className="space-y-2 pt-2 border-t border-border">
               <div className="text-xs font-medium text-primary">Hızlı İşlemler:</div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
                 <Button
                   variant="secondary"
                   size="sm"
@@ -177,6 +184,14 @@ export default function DeveloperBar() {
                   className="text-xs px-2 py-1"
                 >
                   📊 Log User
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleUrlTest}
+                  className="text-xs px-2 py-1"
+                >
+                  🌐 URL Test
                 </Button>
               </div>
             </div>
