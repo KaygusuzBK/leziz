@@ -26,20 +26,20 @@ export default function CommentsSection({ recipeId }: { recipeId: string }) {
       <div className="space-y-4">
         {loading ? (
           <div>Yorumlar yükleniyor...</div>
-        ) : comments && comments.length > 0 ? (
-          comments.map((comment: unknown) => (
-            <div key={comment.id} className="flex items-start gap-3 bg-gray-50 rounded-lg p-3">
+        ) : Array.isArray(comments) && (comments as Record<string, unknown>[]).length > 0 ? (
+          (comments as Record<string, unknown>[]).map((comment) => (
+            <div key={comment.id as string} className="flex items-start gap-3 bg-gray-50 rounded-lg p-3">
               <Image
-                src={comment.user_profiles?.avatar_url || '/default-avatar.png'}
-                alt={comment.user_profiles?.full_name || 'Kullanıcı'}
+                src={(comment.user_profiles as Record<string, unknown>)?.avatar_url as string || '/default-avatar.png'}
+                alt={(comment.user_profiles as Record<string, unknown>)?.full_name as string || 'Kullanıcı'}
                 width={32}
                 height={32}
-                className="rounded-full border"
+                className="rounded-full"
               />
               <div>
-                <div className="font-semibold text-orange-700">{comment.user_profiles?.full_name || 'Kullanıcı'}</div>
-                <div className="text-gray-700">{comment.content}</div>
-                <div className="text-xs text-gray-400 mt-1">{new Date(comment.created_at).toLocaleString('tr-TR')}</div>
+                <div className="font-semibold text-orange-700">{(comment.user_profiles as Record<string, unknown>)?.full_name as string || 'Kullanıcı'}</div>
+                <div className="text-gray-700">{comment.content as string}</div>
+                <div className="text-xs text-gray-400 mt-1">{new Date(comment.created_at as string).toLocaleString('tr-TR')}</div>
               </div>
             </div>
           ))

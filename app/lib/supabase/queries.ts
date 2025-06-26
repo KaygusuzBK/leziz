@@ -1,10 +1,10 @@
 import { createSupabaseServerClient as createServerClient } from './server';
 
 // Helper function to handle Supabase queries
-async function executeQuery(query: unknown) {
+async function executeQuery(query: { then: (callback: (result: { data: unknown; error: unknown }) => void) => void }) {
   const { data, error } = await query;
   if (error) {
-    console.error('Supabase query error:', error.message);
+    console.error('Supabase query error:', error);
     // In a real app, you might want to throw the error or handle it differently
     return { data: null, error };
   }
@@ -62,8 +62,8 @@ export async function getAllRecipes() {
  */
 export async function getCategories() {
   const supabase = createServerClient();
-  const query = supabase.from('categories').select('*').order('name', { ascending: true });
-  return executeQuery(query);
+  const { data, error } = await supabase.from('categories').select('*').order('name', { ascending: true });
+  return { data, error };
 }
 
 /**
@@ -91,12 +91,12 @@ export async function getRecipesByCategory(categoryId: string, limit = 20) {
  */
 export async function getLatestRecipes(limit = 8) {
   const supabase = createServerClient();
-  const query = supabase
+  const { data, error } = await supabase
     .from('recipes')
     .select('*')
     .order('created_at', { ascending: false })
     .limit(limit);
-  return executeQuery(query);
+  return { data, error };
 }
 
 /**
@@ -107,12 +107,12 @@ export async function getLatestRecipes(limit = 8) {
  */
 export async function getFeaturedRecipes(limit = 4) {
     const supabase = createServerClient();
-    const query = supabase
+    const { data, error } = await supabase
         .from('recipes')
         .select('*')
         .order('created_at', { ascending: true }) // Placeholder: oldest recipes
         .limit(limit);
-    return executeQuery(query);
+    return { data, error };
 }
 
 /**
@@ -184,10 +184,10 @@ export async function deleteComment(commentId: string, userId: string) {
  */
 export async function getCommentsByRecipe(recipeId: string) {
   const supabase = createServerClient();
-  const query = supabase
+  const { data, error } = await supabase
     .from('comments')
     .select('*, user_profiles: user_id (id, full_name, avatar_url)')
     .eq('recipe_id', recipeId)
     .order('created_at', { ascending: true });
-  return executeQuery(query);
+  return { data, error };
 } 

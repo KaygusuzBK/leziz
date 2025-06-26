@@ -191,6 +191,15 @@ export const deleteUser = async (): Promise<AuthResult> => {
  */
 export const getUserStats = async (): Promise<AuthResult> => {
   try {
+    const { data: { user } } = await supabase.auth.getUser()
+    
+    if (!user) {
+      return {
+        success: false,
+        error: 'Kullanıcı bulunamadı'
+      }
+    }
+
     // Tarif sayısı
     const { count: recipeCount } = await supabase
       .from('recipes')

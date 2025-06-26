@@ -32,7 +32,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { data: { session } } = await supabase.auth.getSession();
       setSession(session);
       setUser(session?.user ?? null);
-      zustandSetUser(session?.user as unknown ?? null);
+      if (session?.user) {
+        zustandSetUser({
+          id: session.user.id,
+          name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'User',
+          email: session.user.email || ''
+        });
+      } else {
+        zustandSetUser(null);
+      }
       setIsLoading(false);
     };
 
@@ -43,7 +51,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       async (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        zustandSetUser(session?.user as unknown ?? null);
+        if (session?.user) {
+          zustandSetUser({
+            id: session.user.id,
+            name: session.user.user_metadata?.full_name || session.user.email?.split('@')[0] || 'User',
+            email: session.user.email || ''
+          });
+        } else {
+          zustandSetUser(null);
+        }
         setIsLoading(false);
       }
     );

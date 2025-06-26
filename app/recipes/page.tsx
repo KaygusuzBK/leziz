@@ -43,9 +43,19 @@ export default function RecipesPage() {
         </div>
       ) : recipes.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {recipes.map((recipe) => (
-            <RecipeCard key={recipe.id} {...recipe} />
-          ))}
+          {recipes.map((recipe) => {
+            const recipeData = recipe as {
+              id: string;
+              title: string;
+              description?: string;
+              image_url?: string;
+              cooking_time?: number;
+              difficulty?: string;
+              servings?: number;
+              created_at: string;
+            };
+            return <RecipeCard key={recipeData.id} {...recipeData} />;
+          })}
         </div>
       ) : (
         <div className="text-center py-12 text-gray-500 text-lg">

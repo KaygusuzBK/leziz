@@ -22,7 +22,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
   // Yemeği yapan kullanıcıyı getir
   let authorProfile = null
   if (recipe.user_id) {
-    const authorRes = await getUserProfile(recipe.user_id)
+    const authorRes = await getUserProfile()
     if (authorRes.success) {
       authorProfile = authorRes.data
     }
@@ -107,15 +107,15 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
           {authorProfile && (
             <div className="flex items-center gap-3 mt-2">
               <Image
-                src={authorProfile.avatar_url || '/default-avatar.png'}
-                alt={authorProfile.full_name || 'Kullanıcı'}
+                src={(authorProfile as Record<string, unknown>)?.avatar_url as string || '/default-avatar.png'}
+                alt={(authorProfile as Record<string, unknown>)?.full_name as string || 'Kullanıcı'}
                 width={40}
                 height={40}
                 className="rounded-full border"
               />
               <div>
-                <Link href={`/profile/${authorProfile.id}`} className="font-semibold text-orange-600 hover:underline">
-                  {authorProfile.full_name || 'Kullanıcı'}
+                <Link href={`/profile/${(authorProfile as Record<string, unknown>)?.id as string}`} className="font-semibold text-orange-600 hover:underline">
+                  {(authorProfile as Record<string, unknown>)?.full_name as string || 'Kullanıcı'}
                 </Link>
                 <div className="text-xs text-gray-500">Tarifi Ekleyen</div>
               </div>
@@ -142,7 +142,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
                     {recipe.ingredients.map((ingredient: unknown, index: number) => (
                       <li key={index} className="flex items-center gap-2">
                         <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
-                        <span className="text-gray-700">{ingredient}</span>
+                        <span className="text-gray-700">{ingredient as string}</span>
                       </li>
                     ))}
                   </ul>
@@ -165,7 +165,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
                         {index + 1}
                       </div>
                       <div className="flex-1">
-                        <p className="text-gray-700 leading-relaxed">{instruction}</p>
+                        <p className="text-gray-700 leading-relaxed">{instruction as string}</p>
                       </div>
                     </div>
                   ))

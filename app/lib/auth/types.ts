@@ -14,6 +14,8 @@ export interface AuthResult {
 }
 
 export interface UserProfileData {
+  id?: string;
+  email?: string;
   full_name?: string | null;
   bio?: string | null;
   location?: string | null;

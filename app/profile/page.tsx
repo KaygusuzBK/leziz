@@ -29,7 +29,7 @@ export default function ProfilePage() {
     async function loadUserProfile() {
       if (user) {
         setLoadingProfile(true)
-        const { data, error } = await getUserProfile(user.id)
+        const { data, error } = await getUserProfile()
         if (error) {
           console.error('Profile loading error:', error)
           // Eğer profil bulunamazsa, kullanıcının temel bilgilerini kullan
@@ -45,7 +45,9 @@ export default function ProfilePage() {
             updated_at: user.updated_at || user.created_at
           })
         } else if (data) {
-          setProfile(data)
+          // data is Record<string, unknown>, so we need to cast it properly
+          const profileData = data as unknown as ProfileData
+          setProfile(profileData)
         }
         setLoadingProfile(false)
       }

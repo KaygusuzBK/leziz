@@ -348,11 +348,11 @@ export default function CreateRecipeModal({ isOpen, onClose, onSuccess }: Create
                 {formData.image_url && (
                   <Image src={formData.image_url} alt="Yemek Fotoğrafı" className="mt-2 rounded-lg max-h-32 object-contain border" width={128} height={128} />
                 )}
-                <span className="text-gray-500 text-xs">* Yalnızca .jpg, .png veya .jpeg dosyaları desteklenir. Maksimum boyut: 2MB&apos;dır.</span>
+                <span className="text-gray-500 text-xs">* Yalnızca .jpg, .png veya .jpeg dosyaları desteklenir. Maksimum boyut: 2MB.</span>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2 text-primary">
-                  Video URL'i
+                  Video URL
                 </label>
                 <Input
                   type="url"
