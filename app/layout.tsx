@@ -38,6 +38,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Sadece development ortamında DeveloperBar göster
+  const isDev = typeof window !== 'undefined' ? window.location.hostname === 'localhost' : process.env.NODE_ENV !== 'production';
   return (
     <html lang="tr" suppressHydrationWarning>
       <body
@@ -56,7 +58,7 @@ export default function RootLayout({
                   
                 </main>
                 <Footer />
-                <DeveloperBar />
+                {isDev && <DeveloperBar />}
               </div>
             </ThemeCustomizationProvider>
           </AuthProvider>

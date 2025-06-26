@@ -7,6 +7,7 @@ import { useAuth } from '../lib/context/AuthContext'
 import { Button } from './ui/Button'
 import { Chip } from './ui/Chip'
 import { Loader } from './ui/Loader'
+import { appConfig } from '../lib/config/app-config'
 
 type SectionTitleProps = { 
   title: string
@@ -90,18 +91,16 @@ export default function SectionTitle({ title, showWebhookButton = false }: Secti
     })
     
     try {
-      const response = await fetch('https://bedbug-tender-publicly.ngrok-free.app/webhook/cb6a2e6d-a869-41fd-81b6-96ad5dd25731', {
+      const response = await fetch(appConfig.n8nWebhookUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           message: selectedIngredients.length > 0
-            ? `Elimde şu malzemeler var: ${selectedIngredients.join(', ')}. Bu malzemelerle güzel bir yemek tarifi ver, detaylıca anlat, miktarları ve adımları yaz. Sadece Türkçe konuş.`
-            : 'bir yemek tarifi ver detaylı bir şekilde nasıl yapıldığını ve hangi malzemeleri ne kadar kullanmam gerektiğini söyle. Sadece türkçe konuş.',
-          params: {
-            ingredients: selectedIngredients,
-          },
+            ? appConfig.n8nIngredientsMessage(selectedIngredients)
+            : appConfig.n8nDefaultMessage,
+          params: appConfig.n8nParams(selectedIngredients),
         }),
       })
       

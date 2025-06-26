@@ -8,48 +8,36 @@ type Theme = 'light' | 'dark';
 interface ThemeContextType {
   theme: Theme;
   toggleTheme: () => void;
+  setTheme: (theme: Theme) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = useState(false);
   const theme = useThemeStore((state) => state.theme);
   const setTheme = useThemeStore((state) => state.setTheme);
-  const loadTheme = useThemeStore((state) => state.loadTheme);
-  const [mounted, setMounted] = useState(false);
+  const toggleTheme = useThemeStore((state) => state.toggleTheme);
+  const initializeTheme = useThemeStore((state) => state.initializeTheme);
 
   useEffect(() => {
-    loadTheme();
     setMounted(true);
-  }, [loadTheme]);
+    initializeTheme();
+  }, [initializeTheme]);
 
   useEffect(() => {
     if (mounted) {
-      // HTML elementine tema class'ını ekle
-      const root = window.document.documentElement;
-      root.classList.remove('light', 'dark');
-      root.classList.add(theme);
-      
-      // Meta theme-color'ı da güncelle
-      const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-      if (metaThemeColor) {
-        metaThemeColor.setAttribute('content', theme === 'dark' ? '#000000' : '#ffffff');
-      }
+      document.documentElement.classList.remove('light', 'dark');
+      document.documentElement.classList.add(theme);
     }
   }, [theme, mounted]);
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-  };
-
-  // Hydration sorunlarını önlemek için mounted olana kadar loading göster
   if (!mounted) {
     return <div className="min-h-screen bg-background" />;
   }
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
       {children}
     </ThemeContext.Provider>
   );
