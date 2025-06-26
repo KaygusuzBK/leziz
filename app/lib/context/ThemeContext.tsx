@@ -29,15 +29,23 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       const root = window.document.documentElement;
       root.classList.remove('light', 'dark');
       root.classList.add(theme);
+      
+      // Meta theme-color'ı da güncelle
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+      if (metaThemeColor) {
+        metaThemeColor.setAttribute('content', theme === 'dark' ? '#000000' : '#ffffff');
+      }
     }
   }, [theme, mounted]);
 
   const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
   };
 
+  // Hydration sorunlarını önlemek için mounted olana kadar loading göster
   if (!mounted) {
-    return null; // Hydration sorunlarını önlemek için
+    return <div className="min-h-screen bg-background" />;
   }
 
   return (

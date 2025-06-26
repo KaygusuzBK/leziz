@@ -6,18 +6,29 @@ export const supabaseConfig = {
 
 // URL yönetimi için utility fonksiyonları
 export const getBaseUrl = (): string => {
-  const isDevelopment = process.env.NODE_ENV === 'development'
+  // Client-side'da window.location.origin kullan
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+  
+  // Server-side'da environment'a göre belirle
+  const isDevelopment = process.env.NODE_ENV === 'development';
   return isDevelopment 
     ? 'http://localhost:3000' 
-    : 'https://leziz.vercel.app'
+    : 'https://leziz.vercel.app';
 }
 
 export const getAuthCallbackUrl = (): string => {
-  return `${getBaseUrl()}/auth/callback`
+  return `${getBaseUrl()}/auth/callback`;
 }
 
 export const getResetPasswordUrl = (): string => {
-  return `${getBaseUrl()}/auth/reset-password`
+  return `${getBaseUrl()}/auth/reset-password`;
+}
+
+// OAuth için redirect URL'yi al
+export const getOAuthRedirectUrl = (): string => {
+  return `${getBaseUrl()}/auth/callback`;
 }
 
 // Temel environment değişkenlerinin varlığını kontrol et
