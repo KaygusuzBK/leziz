@@ -9,12 +9,20 @@ export interface AuthState {
 
 export interface AuthResult {
   success: boolean
-  data?: any
+  data?: Record<string, unknown>
   error?: string
+}
+
+export interface UserProfileData {
+  full_name?: string | null;
+  bio?: string | null;
+  location?: string | null;
+  website?: string | null;
+  avatar_url?: string | null;
 }
 
 export interface UserProfileUpdates {
   email?: string
   password?: string
-  data?: any
+  data?: Partial<UserProfileData>
 } 

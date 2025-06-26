@@ -78,45 +78,10 @@ const defaultColorScheme: ColorScheme = {
   ring: '#ef6a42'
 }
 
-const darkColorScheme: ColorScheme = {
-  // Primary Colors
-  primary: '#ef6a42',
-  primaryHover: '#d55a38',
-  primaryForeground: '#ffffff',
-  
-  // Secondary Colors
-  secondary: '#374151',
-  secondaryForeground: '#ffffff',
-  
-  // Background Colors
-  background: '#1f2937',
-  cardBackground: '#1a1a1a',
-  cardBorder: '#2a2a2a',
-  cardHover: '#2a2a2a',
-  
-  // Text Colors
-  textPrimary: '#f3f3f3',
-  textSecondary: '#a0a0a0',
-  muted: '#374151',
-  mutedForeground: '#9ca3af',
-  
-  // Accent Colors
-  accent: '#374151',
-  accentForeground: '#ffffff',
-  
-  // Other Colors
-  border: '#374151',
-  input: '#4b5563',
-  destructive: '#dc2626',
-  destructiveForeground: '#ffffff',
-  ring: '#ef6a42'
-}
-
 const ThemeCustomizationContext = createContext<ThemeCustomizationContextType | undefined>(undefined)
 
 export function ThemeCustomizationProvider({ children }: { children: React.ReactNode }) {
   const [colorScheme, setColorScheme] = useState<ColorScheme>(defaultColorScheme)
-  const [isDarkMode, setIsDarkMode] = useState(false)
 
   // Load saved color scheme from localStorage
   useEffect(() => {

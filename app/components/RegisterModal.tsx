@@ -32,31 +32,35 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsLoading(true);
     
     if (formData.password !== formData.confirmPassword) {
       toast.error('Şifreler eşleşmiyor!');
+      setIsLoading(false);
       return;
     }
     
-    setIsLoading(true);
-    
-    const result = await signUpWithEmail(formData.email, formData.password);
+    try {
+      const result = await signUpWithEmail(formData.email, formData.password);
 
-    if (result.success && result.data?.user) {
-      // Update the user's profile with their full name
-      await updateUserProfile({
-        data: { full_name: formData.full_name }
-      });
-      
-      toast.success('Kayıt başarılı! Lütfen e-postanızı kontrol edin.');
-      onClose();
-    } else {
-      toast.error(result.error || 'Kayıt olurken bir hata oluştu.');
+      if (result.success && result.data?.user) {
+        // Update the user's profile with their full name
+        await updateUserProfile({
+          data: { full_name: formData.full_name }
+        });
+        
+        toast.success('Kayıt başarılı! Lütfen e-postanızı kontrol edin.');
+        onClose();
+      } else {
+        toast.error(result.error || 'Kayıt olurken bir hata oluştu.');
+      }
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'Bilinmeyen bir hata oluştu');
+    } finally {
+      setIsLoading(false);
     }
-    
-    setIsLoading(false);
   };
 
   const handleSocialRegister = async (provider: 'google' | 'github' | 'facebook') => {
@@ -84,8 +88,8 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Regi
         toast.success('Yönlendiriliyorsunuz...');
         onClose();
       }
-    } catch (err: any) {
-      toast.error(err.message || 'Kayıt olurken bir hata oluştu.');
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'Kayıt olurken bir hata oluştu.');
     } finally {
       setIsLoading(false);
     }

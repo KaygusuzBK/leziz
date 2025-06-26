@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { getRecipeById, getCommentsByRecipe } from '../../lib/supabase/queries'
+import { getRecipeById } from '../../lib/supabase/queries'
 import { getUserProfile } from '../../lib/auth/profile'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -27,9 +27,6 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
       authorProfile = authorRes.data
     }
   }
-
-  // Yorumları getir
-  const { data: comments } = await getCommentsByRecipe(id)
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -142,7 +139,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
               <div className="bg-gray-50 rounded-lg p-4">
                 {Array.isArray(recipe.ingredients) ? (
                   <ul className="space-y-2">
-                    {recipe.ingredients.map((ingredient: any, index: number) => (
+                    {recipe.ingredients.map((ingredient: unknown, index: number) => (
                       <li key={index} className="flex items-center gap-2">
                         <span className="w-2 h-2 bg-orange-500 rounded-full"></span>
                         <span className="text-gray-700">{ingredient}</span>
@@ -162,7 +159,7 @@ export default async function RecipeDetailPage({ params }: RecipeDetailPageProps
               <h2 className="text-xl font-semibold text-gray-800 mb-4">Hazırlanışı</h2>
               <div className="space-y-4">
                 {Array.isArray(recipe.instructions) ? (
-                  recipe.instructions.map((instruction: any, index: number) => (
+                  recipe.instructions.map((instruction: unknown, index: number) => (
                     <div key={index} className="flex gap-4">
                       <div className="flex-shrink-0 w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold text-sm">
                         {index + 1}

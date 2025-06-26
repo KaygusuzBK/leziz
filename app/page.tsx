@@ -2,7 +2,6 @@ import SectionTitle from "./components/SectionTitle";
 import RecipeCard from "./components/RecipeCard";
 import CategoryCard from "./components/CategoryCard";
 import { getCategories, getFeaturedRecipes, getLatestRecipes } from "./lib/supabase/queries";
-import { toast } from "sonner";
 
 type Recipe = {
   id: string;

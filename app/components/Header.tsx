@@ -1,12 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useTheme } from '../lib/context/ThemeContext';
 import { useAuth } from '../lib/context/AuthContext';
 import LoginModal from './LoginModal';
 import RegisterModal from './RegisterModal';
-import { hoverEffects } from '@/lib/utils';
 import {
   DropdownMenu,
   DropdownMenuContent,

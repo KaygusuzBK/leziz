@@ -11,10 +11,10 @@ export default function HakkimizdaPage() {
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
-              Leziz'e Hoş Geldiniz
+              Leziz&apos;e Hoş Geldiniz
             </h1>
             <p className="text-xl text-orange-100 mb-8 leading-relaxed">
-              Türkiye'nin en büyük yemek tarifi platformunda, binlerce lezzetli tarif ve 
+              Türkiye&apos;nin en büyük yemek tarifi platformunda, binlerce lezzetli tarif ve 
               mutfak tutkunlarıyla buluşun. Geleneksel tatları modern mutfakla buluşturuyoruz.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
@@ -83,7 +83,7 @@ export default function HakkimizdaPage() {
               <div className="bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900/30 dark:to-orange-800/30 rounded-2xl p-8">
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Vizyonumuz</h3>
                 <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  Türkiye'nin en büyük ve güvenilir yemek tarifi platformu olmak. 
+                  Türkiye&apos;nin en büyük ve güvenilir yemek tarifi platformu olmak. 
                   Kullanıcılarımızın mutfak deneyimini kolaylaştırmak, 
                   yemek yapma tutkusunu artırmak ve topluluk ruhunu güçlendirmek.
                 </p>
@@ -151,7 +151,7 @@ export default function HakkimizdaPage() {
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Berkan Kaygusuz</h3>
               <p className="text-orange-600 dark:text-orange-400 mb-4">Kurucu & CEO</p>
               <p className="text-gray-700 dark:text-gray-300 text-sm">
-                Mutfak tutkunu ve teknoloji meraklısı. Leziz'i hayata geçiren vizyoner.
+                Mutfak tutkunu ve teknoloji meraklısı. Leziz&apos;i hayata geçiren vizyoner.
               </p>
             </Card>
             

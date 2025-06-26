@@ -35,7 +35,58 @@ export interface Database {
           created_at?: string
           updated_at?: string | null
         }
-      }
+      },
+      user_recipes: {
+        Row: {
+          id: string
+          user_id: string
+          title: string
+          description: string | null
+          ingredients: string[]
+          instructions: string
+          category_id: string
+          cooking_time: number
+          difficulty_level: 'Kolay' | 'Orta' | 'Zor'
+          servings: number
+          image_url: string | null
+          video_url: string | null
+          is_public: boolean
+          created_at: string
+          updated_at: string | null
+        }
+        Insert: {
+          user_id: string
+          title: string
+          description?: string | null
+          ingredients: string[]
+          instructions: string
+          category_id: string
+          cooking_time: number
+          difficulty_level: 'Kolay' | 'Orta' | 'Zor'
+          servings: number
+          image_url?: string | null
+          video_url?: string | null
+          is_public: boolean
+          created_at?: string
+          updated_at?: string | null
+        }
+        Update: {
+          user_id?: string
+          title?: string
+          description?: string | null
+          ingredients?: string[]
+          instructions?: string
+          category_id?: string
+          cooking_time?: number
+          difficulty_level?: 'Kolay' | 'Orta' | 'Zor'
+          servings?: number
+          image_url?: string | null
+          video_url?: string | null
+          is_public?: boolean
+          created_at?: string
+          updated_at?: string | null
+        }
+      },
       // Burada veritabanı tablolarınızı tanımlayabilirsiniz
       // Örnek:
       // users: {

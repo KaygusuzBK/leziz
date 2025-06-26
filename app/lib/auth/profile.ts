@@ -1,12 +1,12 @@
 import { getSupabaseClient } from '../supabase/client'
-import type { AuthResult, UserProfileUpdates } from './types'
+import type { AuthResult, UserProfileUpdates, UserProfileData } from './types'
 
-const supabase = getSupabaseClient()
+const supabase = getSupabaseClient()!
 
 /**
  * Kullanıcı profil bilgilerini getir
  */
-export const getUserProfile = async (userId: string): Promise<AuthResult> => {
+export const getUserProfile = async (): Promise<AuthResult> => {
   try {
     // Önce mevcut kullanıcı bilgilerini al
     const { data: { user } } = await supabase.auth.getUser()
@@ -22,7 +22,7 @@ export const getUserProfile = async (userId: string): Promise<AuthResult> => {
     const { data, error } = await supabase
       .from('user_profiles')
       .select('*')
-      .eq('id', userId)
+      .eq('id', user.id as string)
       .maybeSingle()
 
     if (error) {
@@ -36,15 +36,17 @@ export const getUserProfile = async (userId: string): Promise<AuthResult> => {
     if (!data) {
       const { data: newProfile, error: createError } = await supabase
         .from('user_profiles')
-        .insert({
-          id: user.id,
-          email: user.email,
-          full_name: user.user_metadata?.full_name || user.user_metadata?.name || '',
-          bio: '',
-          location: '',
-          website: '',
-          avatar_url: user.user_metadata?.avatar_url || ''
-        })
+        .insert([
+          {
+            id: user.id,
+            email: user.email,
+            full_name: user.user_metadata?.full_name || user.user_metadata?.name || '',
+            bio: '',
+            location: '',
+            website: '',
+            avatar_url: user.user_metadata?.avatar_url || null
+          }
+        ] as Partial<UserProfileData>[])
         .select()
         .single()
 
@@ -65,10 +67,10 @@ export const getUserProfile = async (userId: string): Promise<AuthResult> => {
       success: true,
       data: data
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
-      error: error.message || 'Profil bilgileri alınırken bir hata oluştu'
+      error: error instanceof Error ? error.message : 'Profil bilgileri alınırken bir hata oluştu'
     }
   }
 }
@@ -88,7 +90,7 @@ export const updateUserProfile = async (updates: UserProfileUpdates): Promise<Au
     }
 
     // Güncellenecek verileri hazırla
-    const updateData: any = {
+    const updateData: Partial<UserProfileData> = {
       id: user.id,
       email: user.email
     }
@@ -136,11 +138,11 @@ export const updateUserProfile = async (updates: UserProfileUpdates): Promise<Au
         message: 'Kullanıcı bilgileri güncellendi'
       }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Profile update exception:', error)
     return {
       success: false,
-      error: error.message || 'Kullanıcı bilgileri güncellenirken bir hata oluştu'
+      error: error instanceof Error ? error.message : 'Kullanıcı bilgileri güncellenirken bir hata oluştu'
     }
   }
 }
@@ -163,7 +165,7 @@ export const deleteUser = async (): Promise<AuthResult> => {
     const { error } = await supabase
       .from('user_profiles')
       .delete()
-      .eq('id', user.id)
+      .eq('id', user.id as string)
 
     if (error) {
       return {
@@ -176,10 +178,10 @@ export const deleteUser = async (): Promise<AuthResult> => {
       success: true,
       data: { message: 'Hesap başarıyla silindi' }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
-      error: error.message || 'Hesap silinirken bir hata oluştu'
+      error: error instanceof Error ? error.message : 'Hesap silinirken bir hata oluştu'
     }
   }
 }
@@ -187,25 +189,25 @@ export const deleteUser = async (): Promise<AuthResult> => {
 /**
  * Kullanıcı istatistiklerini getir
  */
-export const getUserStats = async (userId: string): Promise<AuthResult> => {
+export const getUserStats = async (): Promise<AuthResult> => {
   try {
     // Tarif sayısı
     const { count: recipeCount } = await supabase
       .from('recipes')
       .select('*', { count: 'exact', head: true })
-      .eq('user_id', userId)
+      .eq('user_id', user.id as string)
 
     // Beğenilen tarif sayısı
     const { count: favoriteCount } = await supabase
       .from('user_favorites')
       .select('*', { count: 'exact', head: true })
-      .eq('user_id', userId)
+      .eq('user_id', user.id as string)
 
     // Takipçi sayısı
     const { count: followerCount } = await supabase
       .from('user_follows')
       .select('*', { count: 'exact', head: true })
-      .eq('following_id', userId)
+      .eq('following_id', user.id as string)
 
     return {
       success: true,
@@ -215,10 +217,10 @@ export const getUserStats = async (userId: string): Promise<AuthResult> => {
         followerCount: followerCount || 0
       }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
-      error: error.message || 'İstatistikler alınırken bir hata oluştu'
+      error: error instanceof Error ? error.message : 'İstatistikler alınırken bir hata oluştu'
     }
   }
 } 

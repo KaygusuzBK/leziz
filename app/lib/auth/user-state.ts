@@ -1,7 +1,7 @@
 import { getSupabaseClient } from '../supabase/client'
 import type { AuthResult } from './types'
 
-const supabase = getSupabaseClient()
+const supabase = getSupabaseClient()!
 
 /**
  * Mevcut kullanıcıyı al
@@ -21,10 +21,10 @@ export const getCurrentUser = async (): Promise<AuthResult> => {
       success: true,
       data: { user }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
-      error: error.message || 'Kullanıcı bilgisi alınırken bir hata oluştu'
+      error: error instanceof Error ? error.message : 'Kullanıcı bilgisi alınırken bir hata oluştu'
     }
   }
 }
@@ -47,10 +47,10 @@ export const getCurrentSession = async (): Promise<AuthResult> => {
       success: true,
       data: { session }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
-      error: error.message || 'Session bilgisi alınırken bir hata oluştu'
+      error: error instanceof Error ? error.message : 'Session bilgisi alınırken bir hata oluştu'
     }
   }
 }

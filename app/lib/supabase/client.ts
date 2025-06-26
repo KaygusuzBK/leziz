@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from '../types/supabase'
-import { supabaseConfig, validateSupabaseConfig, getAuthCallbackUrl } from '../config/supabase'
+import { supabaseConfig, validateSupabaseConfig } from '../config/supabase'
 
 // Client-side Supabase instance
 export const createSupabaseClient = () => {
@@ -13,8 +13,7 @@ export const createSupabaseClient = () => {
       autoRefreshToken: true,
       persistSession: true,
       detectSessionInUrl: true,
-      flowType: 'pkce',
-      redirectTo: getAuthCallbackUrl()
+      flowType: 'pkce'
     }
   })
 }

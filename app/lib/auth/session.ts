@@ -1,7 +1,7 @@
 import { getSupabaseClient } from '../supabase/client'
 import type { AuthResult } from './types'
 
-const supabase = getSupabaseClient()
+const supabase = getSupabaseClient()!
 
 /**
  * Refresh token ile session yenile
@@ -24,10 +24,10 @@ export const refreshSession = async (): Promise<AuthResult> => {
         user: data.user
       }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
-      error: error.message || 'Session yenilenirken bir hata oluştu'
+      error: error instanceof Error ? error.message : 'Session yenilenirken bir hata oluştu'
     }
   }
 } 

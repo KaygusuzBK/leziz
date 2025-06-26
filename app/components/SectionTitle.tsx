@@ -5,7 +5,6 @@ import Modal from './Modal'
 import CreateRecipeModal from './CreateRecipeModal'
 import { useAuth } from '../lib/context/AuthContext'
 import { Button } from './ui/Button'
-import { Input } from './ui/Input'
 import { Chip } from './ui/Chip'
 import { Loader } from './ui/Loader'
 

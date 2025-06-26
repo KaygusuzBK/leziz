@@ -5,7 +5,7 @@ import AddCommentForm from "./AddCommentForm";
 import Image from "next/image";
 
 export default function CommentsSection({ recipeId }: { recipeId: string }) {
-  const [comments, setComments] = useState<any[]>([]);
+  const [comments, setComments] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchComments = async () => {
@@ -27,7 +27,7 @@ export default function CommentsSection({ recipeId }: { recipeId: string }) {
         {loading ? (
           <div>Yorumlar yükleniyor...</div>
         ) : comments && comments.length > 0 ? (
-          comments.map((comment: any) => (
+          comments.map((comment: unknown) => (
             <div key={comment.id} className="flex items-start gap-3 bg-gray-50 rounded-lg p-3">
               <Image
                 src={comment.user_profiles?.avatar_url || '/default-avatar.png'}

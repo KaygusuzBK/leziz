@@ -20,19 +20,24 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
   const [isLoading, setIsLoading] = useState(false);
   const { signInWithGoogle, signInWithGitHub, signInWithFacebook } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     
-    const result = await signInWithEmail(email, password);
+    try {
+      const result = await signInWithEmail(email, password);
 
-    if (result.success) {
-      toast.success('Başarıyla giriş yapıldı!');
-      onClose();
-    } else {
-      toast.error(result.error || 'Giriş yapılırken bir hata oluştu.');
+      if (result.success) {
+        toast.success('Başarıyla giriş yapıldı!');
+        onClose();
+      } else {
+        toast.error(result.error || 'Giriş yapılırken bir hata oluştu.');
+      }
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'Bilinmeyen bir hata oluştu');
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const handleSocialLogin = async (provider: 'google' | 'github' | 'facebook') => {
@@ -59,8 +64,8 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
         toast.success('Yönlendiriliyorsunuz...');
         onClose();
       }
-    } catch (err: any) {
-      toast.error(err.message || 'Giriş yapılırken bir hata oluştu.');
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'Giriş yapılırken bir hata oluştu.');
     } finally {
       setIsLoading(false);
     }

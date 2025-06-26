@@ -6,7 +6,7 @@ import RecipeCard from "../components/RecipeCard";
 import SectionTitle from "../components/SectionTitle";
 
 export default function RecipesPage() {
-  const [recipes, setRecipes] = useState<any[]>([]);
+  const [recipes, setRecipes] = useState<unknown[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -14,13 +14,13 @@ export default function RecipesPage() {
       setLoading(true);
       const supabase = createSupabaseClient();
       // user_recipes tablosu
-      const { data: userRecipes, error: userRecipesError } = await supabase
+      const { data: userRecipes } = await supabase
         .from("user_recipes")
         .select("*")
         .eq("is_public", true)
         .order("created_at", { ascending: false });
       // recipes tablosu
-      const { data: recipesData, error: recipesError } = await supabase
+      const { data: recipesData } = await supabase
         .from("recipes")
         .select("*")
         .eq("is_public", true)

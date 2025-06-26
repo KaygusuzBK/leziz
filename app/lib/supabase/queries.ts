@@ -1,7 +1,7 @@
 import { createSupabaseServerClient as createServerClient } from './server';
 
 // Helper function to handle Supabase queries
-async function executeQuery(query: any) {
+async function executeQuery(query: unknown) {
   const { data, error } = await query;
   if (error) {
     console.error('Supabase query error:', error.message);
@@ -18,7 +18,7 @@ async function executeQuery(query: any) {
 export async function getRecipeById(id: string) {
   const supabase = createServerClient();
   // Önce user_recipes tablosunda ara
-  let { data, error } = await supabase.from('user_recipes').select('*').eq('id', id).single();
+  const { data, error } = await supabase.from('user_recipes').select('*').eq('id', id).single();
   if (!data || error) {
     // recipes tablosunda ara
     const { data: data2, error: error2 } = await supabase.from('recipes').select('*').eq('id', id).single();

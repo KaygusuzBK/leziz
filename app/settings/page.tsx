@@ -5,7 +5,6 @@ import { useThemeCustomization } from '../lib/context/ThemeCustomizationContext'
 import { ColorSection } from '../components/ColorPicker'
 import { Button } from '../components/ui/Button'
 import { Card } from '../components/ui/Card'
-import { Chip } from '../components/ui/Chip'
 
 export default function AyarlarPage() {
   const { colorScheme, updateColorScheme, resetToDefault, saveToLocalStorage } = useThemeCustomization()

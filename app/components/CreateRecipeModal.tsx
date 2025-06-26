@@ -8,12 +8,7 @@ import { toast } from 'sonner'
 import { Button } from './ui/Button'
 import { Input, Textarea } from './ui/Input'
 import { Chip } from './ui/Chip'
-
-interface CreateRecipeModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onSuccess?: () => void
-}
+import Image from 'next/image'
 
 interface RecipeFormData {
   title: string
@@ -27,6 +22,12 @@ interface RecipeFormData {
   image_url: string
   video_url: string
   is_public: boolean
+}
+
+interface CreateRecipeModalProps {
+  isOpen: boolean
+  onClose: () => void
+  onSuccess?: () => void
 }
 
 const DIFFICULTY_LEVELS = ['Kolay', 'Orta', 'Zor'] as const
@@ -57,12 +58,21 @@ export default function CreateRecipeModal({ isOpen, onClose, onSuccess }: Create
     const loadCategories = async () => {
       const supabase = createSupabaseClient()
       const { data } = await supabase.from('categories').select('id, name')
-      if (data) setCategories(data)
+      if (data) {
+        // Sadece id ve name alanı olanları al
+        const typedData = data
+          .filter(category => typeof category === 'object' && category && 'id' in category && 'name' in category)
+          .map(category => ({
+            id: (category as { id: string; name: string }).id,
+            name: (category as { id: string; name: string }).name
+          }))
+        setCategories(typedData)
+      }
     }
     loadCategories()
   }, [])
 
-  const handleInputChange = (field: keyof RecipeFormData, value: any) => {
+  const handleInputChange = (field: keyof RecipeFormData, value: unknown) => {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
@@ -91,9 +101,9 @@ export default function CreateRecipeModal({ isOpen, onClose, onSuccess }: Create
     try {
       const supabase = createSupabaseClient()
       const { error } = await supabase.from('user_recipes').insert({
-        user_id: user.id,
-        ...formData
-      })
+        ...formData,
+        user_id: user.id
+      } as Omit<RecipeFormData, 'category_id'> & { user_id: string })
 
       if (error) throw error
 
@@ -140,8 +150,8 @@ export default function CreateRecipeModal({ isOpen, onClose, onSuccess }: Create
       const { data: publicUrlData } = supabase.storage.from('recipe-images').getPublicUrl(fileName)
       if (!publicUrlData?.publicUrl) throw new Error('Public URL alınamadı')
       setFormData(prev => ({ ...prev, image_url: publicUrlData.publicUrl }))
-    } catch (err: any) {
-      alert('Fotoğraf yüklenirken bir hata oluştu: ' + (err?.message || ''))
+    } catch (err: unknown) {
+      alert('Fotoğraf yüklenirken bir hata oluştu: ' + (err instanceof Error ? err.message : ''))
     } finally {
       setImageUploading(false)
     }
@@ -279,7 +289,7 @@ export default function CreateRecipeModal({ isOpen, onClose, onSuccess }: Create
                 </label>
                 <select
                   value={formData.difficulty_level}
-                  onChange={(e) => handleInputChange('difficulty_level', e.target.value)}
+                  onChange={(e) => handleInputChange('difficulty_level', e.target.value as 'Kolay' | 'Orta' | 'Zor')}
                   className="w-full px-3 py-2 rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-50 bg-card text-primary border-card mb-0"
                 >
                   {DIFFICULTY_LEVELS.map(level => (
@@ -336,8 +346,9 @@ export default function CreateRecipeModal({ isOpen, onClose, onSuccess }: Create
                   {imageUploading && <span className="text-xs text-secondary">Yükleniyor...</span>}
                 </div>
                 {formData.image_url && (
-                  <img src={formData.image_url} alt="Yemek Fotoğrafı" className="mt-2 rounded-lg max-h-32 object-contain border" />
+                  <Image src={formData.image_url} alt="Yemek Fotoğrafı" className="mt-2 rounded-lg max-h-32 object-contain border" width={128} height={128} />
                 )}
+                <span className="text-gray-500 text-xs">* Yalnızca .jpg, .png veya .jpeg dosyaları desteklenir. Maksimum boyut: 2MB&apos;dır.</span>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2 text-primary">

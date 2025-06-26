@@ -2,7 +2,7 @@ import { getSupabaseClient } from '../supabase/client'
 import type { AuthResult } from './types'
 import { getAuthCallbackUrl } from '../config/supabase'
 
-const supabase = getSupabaseClient()
+const supabase = getSupabaseClient()!
 
 /**
  * Email ve şifre ile giriş yap
@@ -28,10 +28,10 @@ export const signInWithEmail = async (email: string, password: string): Promise<
         session: data.session
       }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
-      error: error.message || 'Giriş yapılırken bir hata oluştu'
+      error: error instanceof Error ? error.message : 'Giriş yapılırken bir hata oluştu'
     }
   }
 }
@@ -60,10 +60,12 @@ export const signUpWithEmail = async (email: string, password: string): Promise<
       // After successful sign-up, create a profile entry
       const { error: profileError } = await supabase
         .from('user_profiles')
-        .insert({
-          id: data.user.id,
-          email: data.user.email
-        });
+        .insert([
+          {
+            id: data.user.id,
+            email: data.user.email || ''
+          }
+        ] as { id: string; email: string }[])
 
       if (profileError) {
         // If profile creation fails, we might want to handle this,
@@ -85,10 +87,10 @@ export const signUpWithEmail = async (email: string, password: string): Promise<
         session: data.session
       }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
-      error: error.message || 'Kayıt olurken bir hata oluştu'
+      error: error instanceof Error ? error.message : 'Kayıt olurken bir hata oluştu'
     }
   }
 }
@@ -111,10 +113,10 @@ export const signOut = async (): Promise<AuthResult> => {
       success: true,
       data: { message: 'Başarıyla çıkış yapıldı' }
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
-      error: error.message || 'Çıkış yapılırken bir hata oluştu'
+      error: error instanceof Error ? error.message : 'Çıkış yapılırken bir hata oluştu'
     }
   }
 } 

@@ -5,6 +5,7 @@ import { toast } from 'sonner'
 import { updateUserProfile } from '../lib/auth/profile'
 import { Button } from './ui/Button'
 import { Input, Textarea } from './ui/Input'
+import Image from 'next/image'
 
 interface ProfileData {
   id: string
@@ -72,9 +73,11 @@ export default function ProfileCard({ profile, onProfileUpdate }: ProfileCardPro
   return (
     <div className="bg-card rounded-lg shadow-lg p-8 border border-card">
       <div className="flex flex-col items-center mb-8">
-        <img
+        <Image
           src={profile.avatar_url || 'https://i.pravatar.cc/150'}
           alt="Profile Avatar"
+          width={128}
+          height={128}
           className="w-32 h-32 rounded-full object-cover border-4 border-orange-200 shadow-lg mb-4"
         />
         <h1 className="text-3xl font-bold text-primary">{profile.full_name || 'İsim Belirtilmemiş'}</h1>

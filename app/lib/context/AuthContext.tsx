@@ -22,7 +22,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const supabase = getSupabaseClient();
+  const supabase = getSupabaseClient()!;
   const zustandSetUser = useUserStore((state) => state.setUser);
   const zustandLogout = useUserStore((state) => state.logout);
 
@@ -32,7 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { data: { session } } = await supabase.auth.getSession();
       setSession(session);
       setUser(session?.user ?? null);
-      zustandSetUser(session?.user ?? null);
+      zustandSetUser(session?.user as unknown ?? null);
       setIsLoading(false);
     };
 
@@ -43,7 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       async (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        zustandSetUser(session?.user ?? null);
+        zustandSetUser(session?.user as unknown ?? null);
         setIsLoading(false);
       }
     );
