@@ -7,13 +7,6 @@ export async function GET(request: NextRequest) {
   const code = requestUrl.searchParams.get('code');
   const state = requestUrl.searchParams.get('state');
 
-  // Server-side'da doğru base URL'i al
-  const getServerBaseUrl = (): string => {
-    const host = request.headers.get('host');
-    const protocol = request.headers.get('x-forwarded-proto') || 'http';
-    return `${protocol}://${host}`;
-  };
-
   if (code) {
     const cookieStore = await cookies();
     const supabase = createServerClient(
@@ -50,43 +43,21 @@ export async function GET(request: NextRequest) {
   }
 
   // Redirect URL'yi belirle
-  const serverBaseUrl = getServerBaseUrl();
-  let redirectUrl = serverBaseUrl; // Varsayılan olarak ana sayfa
+  let redirectUrl = '/'; // Varsayılan olarak ana sayfa
 
   // State parametresinden redirect URL'yi al
   if (state) {
     try {
-      // State parametresi base64 encoded olabilir
-      const decodedState = decodeURIComponent(state);
+      // State parametresi mevcut URL'i içeriyor
+      const stateUrl = new URL(state);
+      const requestOrigin = new URL(request.url).origin;
       
-      // Eğer state bir URL içeriyorsa, onu kullan
-      if (decodedState.startsWith('http') || decodedState.startsWith('/')) {
-        // URL'nin aynı domain'den olduğunu kontrol et
-        const stateUrl = new URL(decodedState, serverBaseUrl);
-        const baseUrl = new URL(serverBaseUrl);
-        
-        if (stateUrl.origin === baseUrl.origin) {
-          redirectUrl = stateUrl.toString();
-        }
+      // URL'nin aynı domain'den olduğunu kontrol et
+      if (stateUrl.origin === requestOrigin) {
+        redirectUrl = stateUrl.pathname + stateUrl.search;
       }
     } catch (error) {
       console.warn('Invalid state parameter:', error);
-    }
-  }
-
-  // Referer header'ından da redirect URL'yi alabiliriz
-  const referer = request.headers.get('referer');
-  if (referer && !state) {
-    try {
-      const refererUrl = new URL(referer);
-      const baseUrl = new URL(serverBaseUrl);
-      
-      // Referer'ın aynı domain'den olduğunu kontrol et
-      if (refererUrl.origin === baseUrl.origin) {
-        redirectUrl = refererUrl.toString();
-      }
-    } catch (error) {
-      console.warn('Invalid referer:', error);
     }
   }
 

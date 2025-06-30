@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import Modal from './Modal';
 import { useAuth } from '../lib/context/AuthContext';
 import { signInWithEmail } from '../lib/auth/authentication';
+import { getCurrentUrl } from '../lib/config/supabase';
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
 
@@ -19,14 +20,6 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { signInWithGoogle, signInWithGitHub, signInWithFacebook } = useAuth();
-
-  // Mevcut URL'i al
-  const getCurrentUrl = (): string => {
-    if (typeof window !== 'undefined') {
-      return window.location.href;
-    }
-    return '/';
-  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

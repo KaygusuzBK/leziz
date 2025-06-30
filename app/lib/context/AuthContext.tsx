@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, Session, AuthError } from '@supabase/supabase-js';
 import { getSupabaseClient } from '../supabase/client';
 import { useUserStore } from '../store';
-import { getOAuthRedirectUrl } from '../config/supabase';
+import { getAuthCallbackUrl, getCurrentUrl } from '../config/supabase';
 
 interface AuthContextType {
   user: User | null;
@@ -68,22 +68,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, [supabase.auth, zustandSetUser]);
 
-  // Mevcut URL'i al
-  const getCurrentUrl = (): string => {
-    if (typeof window !== 'undefined') {
-      return window.location.href;
-    }
-    return '/';
-  };
-
   const signInWithGoogle = async () => {
     const currentUrl = getCurrentUrl();
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: getOAuthRedirectUrl(),
+        redirectTo: getAuthCallbackUrl(),
         queryParams: {
-          state: encodeURIComponent(currentUrl)
+          state: currentUrl
         }
       }
     });
@@ -95,9 +87,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
-        redirectTo: getOAuthRedirectUrl(),
+        redirectTo: getAuthCallbackUrl(),
         queryParams: {
-          state: encodeURIComponent(currentUrl)
+          state: currentUrl
         }
       }
     });
@@ -109,9 +101,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'facebook',
       options: {
-        redirectTo: getOAuthRedirectUrl(),
+        redirectTo: getAuthCallbackUrl(),
         queryParams: {
-          state: encodeURIComponent(currentUrl)
+          state: currentUrl
         }
       }
     });

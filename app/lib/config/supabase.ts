@@ -4,32 +4,25 @@ export const supabaseConfig = {
   serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
 }
 
-// URL yönetimi için utility fonksiyonları
-export const getBaseUrl = (): string => {
-  // Client-side'da window.location.origin kullan
+// Basit URL yönetimi - sadece client-side
+export const getCurrentUrl = (): string => {
+  if (typeof window !== 'undefined') {
+    return window.location.href;
+  }
+  return '/';
+};
+
+export const getCurrentOrigin = (): string => {
   if (typeof window !== 'undefined') {
     return window.location.origin;
   }
-  
-  // Server-side'da environment'a göre belirle
-  const isDevelopment = process.env.NODE_ENV === 'development';
-  return isDevelopment 
-    ? 'http://localhost:3000' 
-    : 'https://leziz.vercel.app';
-}
+  return 'http://localhost:3000';
+};
 
+// Auth callback URL'i
 export const getAuthCallbackUrl = (): string => {
-  return `${getBaseUrl()}/auth/callback`;
-}
-
-export const getResetPasswordUrl = (): string => {
-  return `${getBaseUrl()}/auth/reset-password`;
-}
-
-// OAuth için redirect URL'yi al
-export const getOAuthRedirectUrl = (): string => {
-  return `${getBaseUrl()}/auth/callback`;
-}
+  return `${getCurrentOrigin()}/auth/callback`;
+};
 
 // Temel environment değişkenlerinin varlığını kontrol et
 export const validateSupabaseConfig = (): boolean => {
