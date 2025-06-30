@@ -68,31 +68,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, [supabase.auth, zustandSetUser]);
 
+  // Mevcut URL'i al
+  const getCurrentUrl = (): string => {
+    if (typeof window !== 'undefined') {
+      return window.location.href;
+    }
+    return '/';
+  };
+
   const signInWithGoogle = async () => {
+    const currentUrl = getCurrentUrl();
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: getOAuthRedirectUrl()
+        redirectTo: getOAuthRedirectUrl(),
+        queryParams: {
+          state: encodeURIComponent(currentUrl)
+        }
       }
     });
     return { error };
   };
 
   const signInWithGitHub = async () => {
+    const currentUrl = getCurrentUrl();
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
-        redirectTo: getOAuthRedirectUrl()
+        redirectTo: getOAuthRedirectUrl(),
+        queryParams: {
+          state: encodeURIComponent(currentUrl)
+        }
       }
     });
     return { error };
   };
 
   const signInWithFacebook = async () => {
+    const currentUrl = getCurrentUrl();
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'facebook',
       options: {
-        redirectTo: getOAuthRedirectUrl()
+        redirectTo: getOAuthRedirectUrl(),
+        queryParams: {
+          state: encodeURIComponent(currentUrl)
+        }
       }
     });
     return { error };

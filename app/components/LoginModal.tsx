@@ -20,12 +20,21 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
   const [isLoading, setIsLoading] = useState(false);
   const { signInWithGoogle, signInWithGitHub, signInWithFacebook } = useAuth();
 
+  // Mevcut URL'i al
+  const getCurrentUrl = (): string => {
+    if (typeof window !== 'undefined') {
+      return window.location.href;
+    }
+    return '/';
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     
     try {
-      const result = await signInWithEmail(email, password);
+      const currentUrl = getCurrentUrl();
+      const result = await signInWithEmail(email, password, currentUrl);
 
       if (result.success) {
         toast.success('Başarıyla giriş yapıldı!');
@@ -202,16 +211,14 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Logi
           <div className="text-center">
             <span className="text-sm text-secondary">
               Hesabınız yok mu?{' '}
+              <button
+                type="button"
+                onClick={onSwitchToRegister}
+                className="text-accent hover:opacity-80 font-medium"
+              >
+                Kayıt Ol
+              </button>
             </span>
-            <Button
-              type="button"
-              onClick={onSwitchToRegister}
-              variant="ghost"
-              size="sm"
-              className="text-sm font-medium text-accent hover:opacity-80"
-            >
-              Kayıt Ol
-            </Button>
           </div>
         </form>
       </div>

@@ -7,7 +7,7 @@ const supabase = getSupabaseClient()!
 /**
  * Email ve şifre ile giriş yap
  */
-export const signInWithEmail = async (email: string, password: string): Promise<AuthResult> => {
+export const signInWithEmail = async (email: string, password: string, redirectUrl?: string): Promise<AuthResult> => {
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -19,6 +19,11 @@ export const signInWithEmail = async (email: string, password: string): Promise<
         success: false,
         error: error.message
       }
+    }
+
+    // Eğer redirect URL belirtilmişse, o URL'e yönlendir
+    if (redirectUrl && typeof window !== 'undefined') {
+      window.location.href = redirectUrl;
     }
 
     return {
