@@ -1,12 +1,18 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
-import { getBaseUrl } from '../../lib/config/supabase';
 
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
   const state = requestUrl.searchParams.get('state');
+
+  // Server-side'da doğru base URL'i al
+  const getServerBaseUrl = (): string => {
+    const host = request.headers.get('host');
+    const protocol = request.headers.get('x-forwarded-proto') || 'http';
+    return `${protocol}://${host}`;
+  };
 
   if (code) {
     const cookieStore = await cookies();
@@ -44,7 +50,8 @@ export async function GET(request: NextRequest) {
   }
 
   // Redirect URL'yi belirle
-  let redirectUrl = getBaseUrl(); // Varsayılan olarak ana sayfa
+  const serverBaseUrl = getServerBaseUrl();
+  let redirectUrl = serverBaseUrl; // Varsayılan olarak ana sayfa
 
   // State parametresinden redirect URL'yi al
   if (state) {
@@ -55,8 +62,8 @@ export async function GET(request: NextRequest) {
       // Eğer state bir URL içeriyorsa, onu kullan
       if (decodedState.startsWith('http') || decodedState.startsWith('/')) {
         // URL'nin aynı domain'den olduğunu kontrol et
-        const stateUrl = new URL(decodedState, getBaseUrl());
-        const baseUrl = new URL(getBaseUrl());
+        const stateUrl = new URL(decodedState, serverBaseUrl);
+        const baseUrl = new URL(serverBaseUrl);
         
         if (stateUrl.origin === baseUrl.origin) {
           redirectUrl = stateUrl.toString();
@@ -72,7 +79,7 @@ export async function GET(request: NextRequest) {
   if (referer && !state) {
     try {
       const refererUrl = new URL(referer);
-      const baseUrl = new URL(getBaseUrl());
+      const baseUrl = new URL(serverBaseUrl);
       
       // Referer'ın aynı domain'den olduğunu kontrol et
       if (refererUrl.origin === baseUrl.origin) {
